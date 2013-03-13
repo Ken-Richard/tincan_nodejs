@@ -1,4 +1,2 @@
-tincan_nodejs
-=============
-
-Experimental Tincan Server in node.js
+# Exeriment
+This is an experiment and not finished!
