@@ -1,4 +1,4 @@
-exports.middleware = function(req, path, handler) {
+exports.middleware = function(req, res, next) {
 
   req.tcapi_method = function() {
     return this.query['method'] || this.method;
@@ -27,5 +27,7 @@ exports.middleware = function(req, path, handler) {
   req.tcapi_endpoint = function() {
     return this.tcapi_param('endpoint');
   };
+
+  next();
 
 };
