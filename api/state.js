@@ -7,6 +7,7 @@ module.exports = function() {
   var express = require('express');
   var app = express();
 
+  // Load Registration
   loadRegistration = function(req,res) {
     var reg = req.tcapi_registration();
     if (!reg) {
@@ -18,6 +19,7 @@ module.exports = function() {
     return reg;
   };
 
+  // Load State
   loadState = function(req,res) {
     var reg = loadRegistration(req,res);
     if (reg) {
@@ -34,7 +36,7 @@ module.exports = function() {
     }
   };
 
-  // STATE#GET - Get State for a Registration
+  // State#GET - Get State for a Registration
   app.get('/', function(req, res) {
     console.log("*** STATE#GET");
     var state = loadState(req,res);
@@ -45,11 +47,12 @@ module.exports = function() {
     }
   });
 
+  // State#POST
   app.post('/', function(req, res) {
     throw new Error('Not Implemented: State#POST');
   });
 
-  // STATE#PUT - Write State for a Registration
+  // State#PUT - Write State for a Registration
   app.put('/', function(req, res) {
     var reg = loadRegistration(req,res);
     if (reg) {

@@ -28,4 +28,8 @@ easier to debug the request processing.
 6. State Handler - GET & PUT for State Requests
 7. Statement Handler - GET & PUT for Statement Requests
 
+## Supported Transactions
 
+* GET /TCAPI/activities/state/
+* PUT /TCAPI/activities/state/
+* PUT /TCAPI/statements

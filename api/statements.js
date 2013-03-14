@@ -7,14 +7,17 @@ module.exports = function() {
   var express = require('express');
   var app = express();
 
+  // Statements#GET
   app.get('/', function(req, res) {
     throw new Error('Not Implemented: Statements#GET');
   });
 
+  // Statements#POST
   app.post('/', function(req, res) {
     throw new Error('Not Implemented: Statements#POST');
   });
 
+  // Statements#PUT - Save Statement for the Registration
   app.put('/', function(req, res) {
     console.log("*** STATEMENT#PUT ");
 
