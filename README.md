@@ -9,7 +9,7 @@ express framework.
 
 ## Where does the data go?
 
-The data for the LRS is simple cached in memory. This is
+The data for the LRS is simply cached in memory. This is
 not a long term solution. It works this way to make it
 easier to debug the request processing.
 
