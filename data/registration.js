@@ -1,11 +1,40 @@
+//
+// Dummy Registration Data - Generates Registrations
+// as they are referenced.
+//
+
 var registrations = {};
 
-exports.generateTestData = function() {
-  registrations['b9855f24-2140-4fb8-931d-2a37cf412c2e'] = Object.new;
+createTestData = function(reg_id) {
+
+  var reg = {};
+
+  // Basic Fields
+  reg.name = "Name";
+  reg.email = "Email";
+  reg.id = reg_id;
+
+  // States
+  reg.state = {};
+
+  // Statements
+  reg.statements = {};
+
+  // Hash It!
+  registrations[reg_id] = reg;
+
+  // Done
+  return reg;
 };
 
 exports.find = function(id) {
-  return registrations[id];
+  var reg = registrations[id];
+  if (reg==null) {
+    reg = createTestData(id);
+  }
+  return reg;
 };
+
+exports.all = registrations;
 
 

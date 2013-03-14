@@ -1,9 +1,13 @@
+//
+// Extend the request to include helpers
+// for TCAPI
+//
+
+var registration = require('../data/registration.js');
+
 exports.middleware = function(req, res, next) {
 
-  req.tcapi_method = function() {
-    return this.query['method'] || this.method;
-  };
-
+  // Low Level
   req.tcapi_param = function(name) {
     if (this.tcapi_body_params) {
       return this.query[name] || this.tcapi_body_params[name];
@@ -12,6 +16,7 @@ exports.middleware = function(req, res, next) {
     }
   };
 
+  // TCAPI Query Parameters
   req.tcapi_registration_id = function() {
     return this.tcapi_param('registration');
   };
@@ -26,6 +31,20 @@ exports.middleware = function(req, res, next) {
 
   req.tcapi_endpoint = function() {
     return this.tcapi_param('endpoint');
+  };
+
+  req.tcapi_state_id = function() {
+    return this.tcapi_param('stateId');
+  };
+
+  req.tcapi_statement_id = function() {
+    return this.tcapi_param('statementId');
+  };
+
+
+  // Database Lookup
+  req.tcapi_registration = function() {
+    return registration.find(this.tcapi_registration_id());
   };
 
   next();
