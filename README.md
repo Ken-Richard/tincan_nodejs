@@ -33,3 +33,10 @@ easier to debug the request processing.
 * GET /TCAPI/activities/state/
 * PUT /TCAPI/activities/state/
 * PUT /TCAPI/statements
+
+## Tested With
+
+I am testing with articulate storyline files stored in S3. The goal is
+to have everything work in "the cloud" using Cloud Front CDN for delivery
+of courses.
+
