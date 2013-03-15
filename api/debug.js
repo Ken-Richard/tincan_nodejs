@@ -2,7 +2,7 @@
 // Dump Registration Data to JSON and Console
 //
 
-var registration = require('../data/registration.js');
+var db = require('../config/database.js');
 
 module.exports = function() {
 
@@ -10,8 +10,8 @@ module.exports = function() {
   var app = express();
 
   app.get('/', function(req, res) {
-    console.log(registration.all);
-    res.send(registration.all);
+    console.log(db.driver.allRegistrations());
+    res.send(db.driver.allRegistrations());
   });
 
   return app;

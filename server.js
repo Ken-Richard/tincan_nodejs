@@ -14,8 +14,11 @@ app.use(require('./middleware/request.js').middleware);
 // Routes
 app.use('/TCAPI/statements', require('./api/statements.js'));
 app.use('/TCAPI/activities/state', require('./api/state.js'));
+
+// Debug Page
 app.use('/debug', require('./api/debug.js'));
 
-// Go!
+// Ready!
 app.listen(process.env.PORT || 4567);
-console.log('\n\n\n\n\nListening on port 4567');
+console.log('Listening on port 4567');
+
