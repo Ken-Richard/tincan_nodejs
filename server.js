@@ -17,5 +17,5 @@ app.use('/TCAPI/activities/state', require('./api/state.js'));
 app.use('/debug', require('./api/debug.js'));
 
 // Go!
-app.listen(4567);
+app.listen(process.env.PORT || 4567);
 console.log('\n\n\n\n\nListening on port 4567');
