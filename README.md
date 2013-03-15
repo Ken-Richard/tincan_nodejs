@@ -4,8 +4,10 @@
 
 ## Overview
 
-This learning record store is built using Node.js and the
-express framework.
+The goal is to implement a Learning Record Store for the
+TinCan/Experience API that supports cloud content delivery.
+
+Implemented with Node.js.
 
 ## Where does the data go?
 
