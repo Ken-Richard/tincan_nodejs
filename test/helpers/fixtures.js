@@ -12,11 +12,7 @@ exports.actor = {
 
 exports.registrationOnly = function() {
   db.reset();
-  var reg = {};
-  reg.id = 'registration-id';
-  reg.state = {};
-  reg.statements = {};
-  db.allRegistrations()[reg.id] = reg;
+  var reg = db.createRegistration('registration-id');
   return {
     registrationId: reg.id,
     activityId: 'activity-id'
@@ -25,9 +21,11 @@ exports.registrationOnly = function() {
 
 exports.registrationWithStates = function() {
   var data = exports.registrationOnly();
-  var reg = db.allRegistrations()[data.registrationId];
-  reg.state['state-id-a'] = "STATE-DATA-A";
-  reg.state['state-id-b'] = "STATE-DATA-B";
+
+  var reg = db.loadRegistration(data.registrationId);
+  reg.setState('state-id-a',"STATE-DATA-A");
+  reg.setState('state-id-b',"STATE-DATA-B");
+
   return {
     registrationId: reg.id,
     registration: reg,
@@ -35,4 +33,23 @@ exports.registrationWithStates = function() {
     stateId: 'state-id-a',
     stateValue: 'STATE-DATA-A'
   };
+
+};
+
+
+exports.registrationWithStatements = function() {
+  var data = exports.registrationOnly();
+
+  var reg = db.loadRegistration(data.registrationId);
+  reg.setStatement('state-id-a', { name: 'statement-a'} );
+  reg.setStatement('state-id-b', { name: 'statement-b'});
+
+  return {
+    registrationId: reg.id,
+    registration: reg,
+    activityId: 'activity-id',
+    statementId: 'state-id-a',
+    statementValue: { name: 'statement-a'}
+  };
+
 };

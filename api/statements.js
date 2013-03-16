@@ -11,54 +11,37 @@ module.exports = function() {
 
 
   //
-  // STATEMENT PUT
+  // Statement#PUT - Save a State
   //
-  // https://github.com/adlnet/xAPI-Spec/blob/master/xAPI.md#putstatements
-  //
-
-  // Statements#PUT - Save Statement for the Registration
   app.put('/', function(req, res) {
-    console.log("*** STATEMENT#PUT ");
 
-    var reg = req.db.loadRegistration(req.tcapi_registration_id());
-    var exstingStatement = reg ? req.findStatement(reg) : null;
+    var reg = req.findRegistration(res);
+    var statementId = req.tcapi_statement_id();
+    var statementData = reg && statementId ? reg.getStatement(statementId) : null;
+    var data = JSON.parse(req.tcapi_body_params.content);
 
-    if (!reg) {
-      res.send(404);
-    } else if (exstingStatement) {
+    if (reg && statementId && statementData) {
+      // Already Exits - Error per Spec
       res.send(409);
-    } else {
-      req.saveStatement(reg);
+    } else if (reg && statementId) {
+      // Good Request
+      reg.saveStatement(statementId,data);
       res.send(204);
+    } else {
+      res.send(404);
     }
 
   });
 
 
 
-  //
-  // Statement POST
-  //
-  // https://github.com/adlnet/xAPI-Spec/blob/master/xAPI.md#poststatements
-  //
-
-  app.post('/', function(req, res) {
-    throw new Error('Not Implemented: Statements#POST');
+  app.get('/', function(req, res) {
+    res.send("Not Implemented", 500);
   });
+
+
   return app;
 
-
-
-
-  //
-  // Statement GET
-  //
-  // https://github.com/adlnet/xAPI-Spec/blob/master/xAPI.md#getstatements
-  //
-
-  app.get('/', function(req, res) {
-    throw new Error('Not Implemented: Statements#GET');
-  });
 
 
 }();

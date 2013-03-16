@@ -16,23 +16,19 @@ module.exports = function() {
   // TODO: Since Parameter
   //
   app.get('/', function(req, res) {
+
     var reg = req.findRegistration(res);
-    if (reg) {
-      if (req.tcapi_state_id()) {
-        // With State ID Param
-        var state = reg ? req.findState(reg) : null;
-        if (state) {
-          res.send(state);
-        } else {
-          res.send(404);
-       }
-      } else {
-        // Without State ID Param
-        res.send(JSON.stringify(req.stateKeys(reg)));
-      }
+    var stateId = req.tcapi_state_id();
+    var stateData = reg && stateId ? reg.getState(stateId) : null;
+
+    if (reg && stateId && stateData) {
+      res.send(stateData);
+    } else if (reg && !stateId) {
+      res.send(JSON.stringify(reg.getStateKeys()));
     } else {
       res.send(404);
     }
+
   });
 
 
@@ -41,23 +37,21 @@ module.exports = function() {
   // State#PUT - Write State for a Registration
   //
   app.put('/', function(req, res) {
+
     var reg = req.findRegistration();
+    var stateId = req.tcapi_state_id();
+    var stateData = req.tcapi_body_params.content;
+
     if (reg) {
-      req.saveState(reg);
+      reg.setState(stateId,stateData);
       res.send(204);
     } else {
       res.send(404);
     }
+
   });
 
 
-
-  //
-  // State#POST
-  //
-  app.post('/', function(req, res) {
-    res.send("Not Implemented", 500);
-  });
 
 
 
@@ -65,25 +59,29 @@ module.exports = function() {
   // State#DELETE
   //
   app.delete('/', function(req, res) {
+
     var reg = req.findRegistration(res);
-    if (reg) {
-      if (req.tcapi_state_id()) {
-        // With State ID Param
-        var state = reg ? req.findState(reg) : null;
-        if (state) {
-          req.deleteState(reg, req.tcapi_state_id());
-          res.send(204);
-        } else {
-          res.send(404);
-       }
-      } else {
-        // Without State ID Param
-        req.deleteState(reg,null);
-        res.send(204);
-      }
+    var stateId = req.tcapi_state_id();
+    var stateData = reg && stateId ? reg.getState(stateId) : null;
+
+    if (reg && stateId && stateData) {
+      reg.deleteState(stateId);
+      res.send(204);
+    } else if (reg && !stateId) {
+      reg.deleteState();
+      res.send(204);
     } else {
       res.send(404);
     }
+
+  });
+
+
+  //
+  // State#POST
+  //
+  app.post('/', function(req, res) {
+    res.send("Not Implemented", 500);
   });
 
   return app;

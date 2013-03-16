@@ -69,7 +69,7 @@ describe('State API', function() {
       it('should change the state', function() {
         result.should.have.property('statusCode', 204);
         var reg = db.loadRegistration(data.registrationId);
-        var state = reg.state["my-state-id"];
+        var state = reg.getState("my-state-id");
         state.should.equal('my-new-state-data');
       });
 
@@ -101,7 +101,7 @@ describe('State API', function() {
       it('should change the state', function() {
         result.should.have.property('statusCode', 204);
         var reg = db.loadRegistration(data.registrationId);
-        var state = reg.state[data.stateId];
+        var state = reg.getState(data.stateId);
         state.should.equal('new-state-data');
       });
 

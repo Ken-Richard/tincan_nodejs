@@ -79,7 +79,7 @@ describe('State API', function() {
 
         // Setup a registration with a state
         data = fixtures.registrationWithStates();
-        Object.keys(data.registration.state).length.should.equal(2);
+        data.registration.getStateKeys().length.should.equal(2);
 
         client.deleteState(data.registrationId, data.activityId, data.stateId, fixtures.actor,
           function(response) {
@@ -91,7 +91,7 @@ describe('State API', function() {
 
       it('should return the state data', function() {
         result.should.have.property('statusCode', 204);
-        Object.keys(data.registration.state).length.should.equal(1);
+        data.registration.getStateKeys().length.should.equal(1);
       });
 
     });
@@ -107,7 +107,7 @@ describe('State API', function() {
 
         // Setup a registration with a state
         data = fixtures.registrationWithStates();
-        Object.keys(data.registration.state).length.should.equal(2);
+        data.registration.getStateKeys().length.should.equal(2);
 
         client.deleteState(data.registrationId, data.activityId, null, fixtures.actor,
           function(response) {
@@ -119,7 +119,7 @@ describe('State API', function() {
 
       it('should return the state data', function() {
         result.should.have.property('statusCode', 204);
-        Object.keys(data.registration.state).length.should.equal(0);
+        data.registration.getStateKeys().length.should.equal(0);
       });
 
     });

@@ -7,8 +7,17 @@ var db = require('../config/database.js');
 
 exports.middleware = function(req, res, next) {
 
+
+
+  // Database
+  req.db = db.driver;
+
+
+
   //
   // Low Level
+  //
+  // TODO: Also Check Headers for Non-Alternative API
   //
   req.tcapi_param = function(name) {
     if (this.tcapi_body_params) {
@@ -17,6 +26,8 @@ exports.middleware = function(req, res, next) {
       return this.query[name];
     }
   };
+
+
 
   //
   // Common Parameters
@@ -46,9 +57,6 @@ exports.middleware = function(req, res, next) {
   };
 
 
-  // Database
-  req.db = db.driver;
-
 
   //
   // Database Helpers
@@ -61,48 +69,6 @@ exports.middleware = function(req, res, next) {
     return registration;
   };
 
-  // States
-  req.findState = function(registration) {
-    var state = null;
-    if (registration) {
-      var stateId = this.tcapi_state_id();
-      state = this.db.loadState(registration,stateId);
-    }
-    return state;
-  };
-
-  req.saveState = function(registration) {
-    if (registration) {
-      var stateId = this.tcapi_state_id();
-      this.db.saveState(registration,stateId, req.tcapi_body_params.content);
-    }
-  };
-
-  req.stateKeys = function(registration) {
-    return this.db.stateKeys(registration);
-  };
-
-  req.deleteState = function(registration,id) {
-    this.db.deleteState(registration,id);
-  }
-
-  // Statements
-
-  req.findStatement = function(registration) {
-    var statement = null;
-    if (registration) {
-      var statementId = this.tcapi_statement_id();
-      statement = this.db.loadStatement(registration,statementId);
-    }
-    return statement;
-  };
-
-  req.saveStatement = function(registration) {
-    if (registration) {
-      var statementId = this.tcapi_statement_id();
-      this.db.saveStatement(registration,statementId, JSON.parse(req.tcapi_body_params.content));
-    }
-  };
 
   next();
 

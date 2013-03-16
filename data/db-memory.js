@@ -1,63 +1,92 @@
 //
-// In-Memory Database for Development & Testing Purposes
-// Eventualy there will be other database drivers
+// Registration Class
 //
 
-// Data Store
+function Registration(id) {
+
+  //
+  // Registration Fields
+  //
+
+  this.id = id;
+
+
+
+  //
+  // State Data
+  //
+
+  this.states = {};
+
+  this.setState = function(id,data) {
+    this.states[id] = data;
+  };
+
+  this.getState = function(id) {
+    return this.states[id];
+  };
+
+  this.getStateKeys = function() {
+    return Object.keys(this.states);
+  };
+
+  this.deleteState = function(id) {
+    if (id) {
+      delete this.states[id];
+    } else {
+      this.states = {};
+    }
+  };
+
+
+  //
+  // Statement Data
+  //
+
+  this.statements = {};
+
+  this.setStatement = function(id,data) {
+    states[id] = data;
+  };
+
+  this.getStatement = function(id) {
+    return states[id];
+  };
+
+};
+
+
+//
+// Registration Data Store
+//
 var registrations = {};
 
-exports.initialize = function() {
 
-  // Create a sample record
-  reg = {};
-  reg.id = 'b9855f24-2140-4fb8-931d-2a37cf412c2e';
-  reg.state = {};
-  reg.statements = {};
-  registrations[reg.id] = reg;
-
-}
+//
+// Exports
+//
 
 // All Registrations
 exports.allRegistrations = function() {
   return registrations;
-}
+};
 
-// Create Registration if not found
+// Load Specific Registration
 exports.loadRegistration = function(registrationId) {
   return registrations[registrationId];
 };
 
-// Statements
-exports.loadStatement = function(registration, statementId) {
-  return registration.statements[statementId];
-};
-
-exports.saveStatement = function(registration, statementId, statement) {
-  registration.statements[statementId] = statement;
-};
-
-// States
-exports.loadState = function(registration, stateId) {
-  return registration.state[stateId];
-};
-
-exports.saveState = function(registration, stateId, state) {
-  registration.state[stateId] = state;
-};
-
-exports.stateKeys = function(registration) {
-  return Object.keys(registration.state);
-};
-
-exports.deleteState = function(registration, stateId) {
-  if (stateId) {
-    delete registration.state[stateId];
-  } else {
-    registration.state = {};
- }
+exports.createRegistration = function(id) {
+  var reg = new Registration(id);
+  registrations[id] = new Registration(id);
+  return reg;
 }
 
-// Reset for Testing
+exports.initialize = function() {
+  return exports.createRegistration('b9855f24-2140-4fb8-931d-2a37cf412c2e');
+};
+
 exports.reset = function() {
   registrations = {};
-}
+};
+
