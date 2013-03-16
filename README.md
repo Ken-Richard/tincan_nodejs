@@ -7,13 +7,18 @@
 The goal is to implement a Learning Record Store for the
 TinCan/Experience API that supports cloud content delivery.
 
+The initial focus is Articulate Storyline which uses the
+alternative syntax (everything is a post) for all transactions.
+
 Implemented with Node.js.
 
-## Where does the data go?
+Data is stored in-memory for ease and speed of testing. Database
+drivers will be added once the main transactions are implemented.
 
-The data for the LRS is simply cached in memory. This is
-not a long term solution. It works this way to make it
-easier to debug the request processing.
+## Testing
+
+1. npm test
+2. Articulate Storyline
 
 ## How does it work?
 
@@ -27,18 +32,13 @@ easier to debug the request processing.
  * Extracts the actual JSON payload from the content parameter
 5. Middleware to extend the request object
  * Adds functions to handle common TCAPI parameters
-6. State Handler - GET & PUT for State Requests
-7. Statement Handler - GET & PUT for Statement Requests
+6. State Handler - GET/PUT/POST/DELETE for State Requests
+7. Statement Handler - GET/PUT/POST/DELETE for Statement Requests
 
 ## Supported Transactions
 
-* GET /TCAPI/activities/state/
-* PUT /TCAPI/activities/state/
-* PUT /TCAPI/statements
-
-## Tested With
-
-I am testing with articulate storyline files stored in S3. The goal is
-to have everything work in "the cloud" using Cloud Front CDN for delivery
-of courses.
+* GET    /TCAPI/activities/state/
+* PUT    /TCAPI/activities/state/
+* DELETE /TCAPI/activities/state/
+* PUT    /TCAPI/statements
 

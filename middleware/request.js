@@ -45,6 +45,7 @@ exports.middleware = function(req, res, next) {
     return this.tcapi_param('statementId');
   };
 
+
   // Database
   req.db = db.driver;
 
@@ -61,7 +62,6 @@ exports.middleware = function(req, res, next) {
   };
 
   // States
-
   req.findState = function(registration) {
     var state = null;
     if (registration) {
@@ -74,9 +74,17 @@ exports.middleware = function(req, res, next) {
   req.saveState = function(registration) {
     if (registration) {
       var stateId = this.tcapi_state_id();
-      this.db.saveState(registration,stateId, JSON.parse(req.tcapi_body_params.content));
+      this.db.saveState(registration,stateId, req.tcapi_body_params.content);
     }
   };
+
+  req.stateKeys = function(registration) {
+    return this.db.stateKeys(registration);
+  };
+
+  req.deleteState = function(registration,id) {
+    this.db.deleteState(registration,id);
+  }
 
   // Statements
 

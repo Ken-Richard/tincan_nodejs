@@ -20,7 +20,7 @@ module.exports = function() {
   app.put('/', function(req, res) {
     console.log("*** STATEMENT#PUT ");
 
-    var reg = req.findRegistration();
+    var reg = req.db.loadRegistration(req.tcapi_registration_id());
     var exstingStatement = reg ? req.findStatement(reg) : null;
 
     if (!reg) {
