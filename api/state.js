@@ -32,7 +32,6 @@ module.exports = function() {
   });
 
 
-
   //
   // State#PUT - Write State for a Registration
   //
@@ -50,9 +49,6 @@ module.exports = function() {
     }
 
   });
-
-
-
 
 
   //
@@ -83,6 +79,7 @@ module.exports = function() {
   app.post('/', function(req, res) {
     res.send("Not Implemented", 500);
   });
+
 
   return app;
 

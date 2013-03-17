@@ -9,19 +9,20 @@ var fixtures = require('./helpers/fixtures.js');
 var db = require('../data/db-memory.js');
 
 describe('State API', function() {
-
-  before(function(done) {
-    db.reset();
-    server.start(done);
-  });
-
-  after(function(done) {
-    db.reset();
-    server.stop(done);
-  });
-
   describe('Delete',function() {
 
+    before(function(done) {
+      server.start(done);
+    });
+
+    after(function(done) {
+      server.stop(done);
+    });
+
+    beforeEach(function(done) {
+      db.reset();
+      done();
+    });
 
     describe('Invalid Registration', function() {
 

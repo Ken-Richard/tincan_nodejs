@@ -6,6 +6,7 @@ var http = require('http');
 var qs = require('querystring');
 
 var state_url = '/TCAPI/activities/state';
+var statement_url = '/TCAPI/statements';
 
 
 //
@@ -49,6 +50,22 @@ exports.deleteState = function(registration_id, activity_id, state_id, actor, ca
 
 
 
+var statementParams = function(registration_id, statement_id) {
+  return {
+    registration:   registration_id,
+    statementId:    statement_id,
+    'Content-Type': 'application/json'
+  };
+};
+
+exports.putStatement = function(registration_id, statement_id, statement, callback) {
+  var query = { method: 'PUT' };
+  var params = statementParams(registration_id,statement_id);
+  exports.post(statement_url, query, params, JSON.stringify(statement), callback);
+};
+
+
+
 
 
 //
@@ -59,7 +76,7 @@ exports.post = function(url, query, params, post_data, callback) {
 
   var options = {
     hostname: 'localhost',
-    port: 4567,
+    port: 3001,
     path: url + '?' + qs.stringify(query),
     method: 'POST',
     headers: {

@@ -16,7 +16,7 @@ module.exports = function() {
   app.use(require('../middleware/method.js').middleware);
   app.use(require('../middleware/params.js').middleware);
   app.use(require('../middleware/request.js').middleware);
-  //app.use(require('../middleware/logger.js').middleware);
+  app.use(require('../middleware/logger.js').middleware);
 
   // Routes
   app.use('/TCAPI/statements', require('../api/statements.js'));

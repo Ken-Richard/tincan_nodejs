@@ -8,8 +8,8 @@ var server = require('../../config/server.js');
 var srv = require('http').createServer(server);
 
 exports.start = function(done) {
-  srv.listen(4567,done);
-  console.log('Listening on port 4567');
+  srv.listen(3001,done);
+  console.log('Listening on port 3001');
 };
 
 exports.stop = function(done) {

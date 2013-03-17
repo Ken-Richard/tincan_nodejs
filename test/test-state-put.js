@@ -9,27 +9,29 @@ var fixtures = require('./helpers/fixtures.js');
 var db = require('../data/db-memory.js');
 
 describe('State API', function() {
-
-  before(function(done) {
-    db.reset();
-    server.start(done);
-  });
-
-  after(function(done) {
-    db.reset();
-    server.stop(done);
-  });
-
   describe('Put',function() {
 
+    before(function(done) {
+      server.start(done);
+    });
 
+    after(function(done) {
+      server.stop(done);
+    });
 
     describe('Invalid Registration', function() {
 
+      var data;
       var result;
+      var reg;
 
       before(function(done) {
-        client.putState('bogus', 'bugus', 'bogus', fixtures.actor, "qqq",
+
+        data = fixtures.registrationWithStates();
+        reg = data.registration;
+
+        client.putState('bogus-reg-id', 'bugus-activity-id', 'bogus-state-id',
+          fixtures.actor, "qqq",
           function(response) {
             result = response;
             done();
@@ -44,18 +46,17 @@ describe('State API', function() {
     });
 
 
-
     describe('Save New State', function() {
 
-      var result;
       var data;
+      var result;
+      var reg;
 
       before(function(done) {
 
-        // Setup Single Registration witout state
-        data = fixtures.registrationOnly();
+        data = fixtures.registrationWithStates();
+        reg = data.registration;
 
-        // Issue Request
         client.putState(data.registrationId, data.activityId, 'my-state-id', fixtures.actor,
           "my-new-state-data",
           function(response) {
@@ -63,12 +64,11 @@ describe('State API', function() {
             done();
           }
         );
-
       });
 
       it('should change the state', function() {
         result.should.have.property('statusCode', 204);
-        var reg = db.loadRegistration(data.registrationId);
+        console.log(reg.getStateKeys());
         var state = reg.getState("my-state-id");
         state.should.equal('my-new-state-data');
       });
@@ -76,20 +76,23 @@ describe('State API', function() {
     });
 
 
-
     describe('Overwrite Existing State', function() {
 
-      var result;
       var data;
+      var result;
+      var reg;
 
       before(function(done) {
 
-        // Setup Single Registration witout state
         data = fixtures.registrationWithStates();
+        reg = data.registration;
+
+        var state = reg.getState(data.stateId);
+        state.should.equal('STATE-DATA-A');
 
         // Issue Request
         client.putState(data.registrationId, data.activityId, data.stateId, fixtures.actor,
-          "new-state-data",
+          "replaced-state-data",
           function(response) {
             result = response;
             done();
@@ -102,12 +105,10 @@ describe('State API', function() {
         result.should.have.property('statusCode', 204);
         var reg = db.loadRegistration(data.registrationId);
         var state = reg.getState(data.stateId);
-        state.should.equal('new-state-data');
+        state.should.equal('replaced-state-data');
       });
 
     });
-
-
 
   });
 });

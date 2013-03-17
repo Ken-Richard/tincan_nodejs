@@ -25,7 +25,7 @@ module.exports = function() {
       res.send(409);
     } else if (reg && statementId) {
       // Good Request
-      reg.saveStatement(statementId,data);
+      reg.addStatement(statementId,data);
       res.send(204);
     } else {
       res.send(404);
@@ -34,14 +34,21 @@ module.exports = function() {
   });
 
 
-
   app.get('/', function(req, res) {
     res.send("Not Implemented", 500);
   });
 
 
+  app.post('/', function(req, res) {
+    res.send("Not Implemented", 500);
+  });
+
+
+  app.delete('/', function(req, res) {
+    res.send("Not Implemented", 500);
+  });
+
+
   return app;
-
-
 
 }();
