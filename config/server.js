@@ -19,8 +19,8 @@ module.exports = function() {
   app.use(require('../middleware/logger.js').middleware);
 
   // Routes
-  app.use('/TCAPI/statements', require('../api/statements.js'));
-  app.use('/TCAPI/activities/state', require('../api/state.js'));
+  app.use('/xAPI/statements', require('../api/statements.js'));
+  app.use('/xAPI/activities/state', require('../api/state.js'));
 
   // Debug Page
   app.use('/debug', require('../api/debug.js'));

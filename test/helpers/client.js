@@ -5,8 +5,8 @@
 var http = require('http');
 var qs = require('querystring');
 
-var state_url = '/TCAPI/activities/state';
-var statement_url = '/TCAPI/statements';
+var state_url = '/xAPI/activities/state';
+var statement_url = '/xAPI/statements';
 
 
 //
