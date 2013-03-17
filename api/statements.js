@@ -13,6 +13,9 @@ module.exports = function() {
   //
   // Statement#PUT - Save a State
   //
+  // TODO - If statement exists check for a match
+  // before returning the 409.
+  //
   app.put('/', function(req, res) {
 
     var reg = req.findRegistration(res);
@@ -34,8 +37,29 @@ module.exports = function() {
   });
 
 
+  //
+  // Statement#GET - Get a Statement
+  //
+  // TODO - Reverse Chronoligical Order
+  // TODO - Maximum Results with More URL
+  //
   app.get('/', function(req, res) {
-    res.send("Not Implemented", 500);
+
+    var reg = req.findRegistration(res);
+    var statementId = req.tcapi_statement_id();
+    var statementData = reg && statementId ? reg.getStatement(statementId) : null;
+
+    if (reg && statementId && statementData) {
+      res.send(statementData);
+    } else if (reg && !statementId) {
+      var data = {
+        statements: reg.allStatements()
+      };
+      res.send(JSON.stringify(data));
+    } else {
+      res.send(404);
+    }
+
   });
 
 
@@ -45,7 +69,7 @@ module.exports = function() {
 
 
   app.delete('/', function(req, res) {
-    res.send("Not Implemented", 500);
+    res.send("Not supporte in the standard", 400);
   });
 
 

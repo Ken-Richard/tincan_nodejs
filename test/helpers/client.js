@@ -64,6 +64,19 @@ exports.putStatement = function(registration_id, statement_id, statement, callba
   exports.post(statement_url, query, params, JSON.stringify(statement), callback);
 };
 
+exports.getStatement = function(registration_id, statement_id, callback) {
+  var query = { method: 'GET' };
+  var params = statementParams(registration_id,statement_id);
+  exports.post(statement_url, query, params, null, callback);
+}
+
+exports.deleteStatement  = function(registration_id, statement_id, callback) {
+  var query = { method: 'DELETE' };
+  var params = statementParams(registration_id,statement_id);
+  exports.post(statement_url, query, params, null, callback);
+}
+
+
 
 
 

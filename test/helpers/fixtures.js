@@ -53,12 +53,11 @@ exports.registrationWithStates = function() {
   };
 };
 
-
 exports.registrationWithStatements = function() {
   var data = exports.registrationOnly();
   var reg = db.loadRegistration(data.registrationId);
-  reg.setStatement('state-id-a', { name: 'statement-a'} );
-  reg.setStatement('state-id-b', { name: 'statement-b'} );
+  reg.addStatement('state-id-a', { name: 'statement-a'} );
+  reg.addStatement('state-id-b', { name: 'statement-b'} );
   return {
     registrationId: reg.id,
     registration: reg,
