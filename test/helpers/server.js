@@ -9,7 +9,6 @@ var srv = require('http').createServer(server);
 
 exports.start = function(done) {
   srv.listen(3001,done);
-  console.log('Listening on port 3001');
 };
 
 exports.stop = function(done) {

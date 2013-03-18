@@ -12,9 +12,27 @@ exports.actor = {
   }
 };
 
-exports.statement_id_1 = 'MY-STATEMENT-ID';
+exports.statement_id_1 = 'MY-STATEMENT-ID-1';
 
 exports.statement_1 = {
+  "actor":{
+    "objectType": "Agent",
+    "mbox":"mailto:xapi@adlnet.gov"
+  },
+  "verb":{
+    "id":"http://adlnet.gov/expapi/verbs/created",
+    "display":{
+      "en-US":"created"
+    }
+  },
+  "object":{
+    "id":"http://example.adlnet.gov/xapi/example/activity"
+  }
+};
+
+exports.statement_id_2 = 'MY-STATEMENT-ID-2';
+
+exports.statement_2 = {
   "actor":{
     "objectType": "Agent",
     "mbox":"mailto:xapi@adlnet.gov"
@@ -35,13 +53,14 @@ exports.registrationOnly = function() {
   var reg = db.createRegistration('registration-id');
   return {
     registrationId: reg.id,
+    registration: reg,
     activityId: 'activity-id'
   };
 };
 
 exports.registrationWithStates = function() {
   var data = exports.registrationOnly();
-  var reg = db.loadRegistration(data.registrationId);
+  var reg = data.registration;
   reg.setState('state-id-a',"STATE-DATA-A");
   reg.setState('state-id-b',"STATE-DATA-B");
   return {
@@ -55,14 +74,13 @@ exports.registrationWithStates = function() {
 
 exports.registrationWithStatements = function() {
   var data = exports.registrationOnly();
-  var reg = db.loadRegistration(data.registrationId);
-  reg.addStatement('state-id-a', { name: 'statement-a'} );
-  reg.addStatement('state-id-b', { name: 'statement-b'} );
+  var reg = data.registration;
+  reg.addStatement(exports.statement_id_1, exports.statement_1);
+  reg.addStatement(exports.statement_id_2, exports.statement_2);
   return {
     registrationId: reg.id,
     registration: reg,
-    activityId: 'activity-id',
-    statementId: 'state-id-a',
-    statementValue: { name: 'statement-a'}
+    statementId: exports.statement_id_1,
+    statement: { name: exports.statement_1 }
   };
 };

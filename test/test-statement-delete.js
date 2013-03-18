@@ -21,12 +21,6 @@ describe('Statement API', function() {
       server.stop(done);
     });
 
-    beforeEach(function(done) {
-      db.reset();
-      done();
-    });
-
-
     describe('Error', function() {
 
       var result;

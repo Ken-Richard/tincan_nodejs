@@ -64,6 +64,7 @@ function Registration(id) {
 // Registration Data Store
 //
 var registrations = {};
+var code = "A";
 
 
 //
@@ -72,8 +73,6 @@ var registrations = {};
 
 // All Registrations
 exports.allRegistrations = function() {
-  console.log("ALL");
-  console.log(registrations);
   return registrations;
 };
 
@@ -97,6 +96,5 @@ exports.reset = function() {
   console.log("*** RESET DATABASE ***");
   registrations = {};
 };
-
 
 

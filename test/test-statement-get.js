@@ -19,11 +19,6 @@ describe('Statement API', function() {
       server.stop(done);
     });
 
-    beforeEach(function(done) {
-      db.reset();
-      done();
-    });
-
     describe('Invalid Registration', function() {
 
       var result;

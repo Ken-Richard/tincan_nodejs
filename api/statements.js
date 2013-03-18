@@ -4,6 +4,8 @@
 // Specification:
 // https://github.com/adlnet/xAPI-Spec/blob/master/xAPI.md#72-statement-api
 
+var db = require('../config/database.js').driver;
+
 module.exports = function() {
 
   var express = require('express');

@@ -72,30 +72,28 @@ describe('Statement API', function() {
 
     });
 
-    describe('New', function() {
+    describe('New with Duplicate', function() {
 
       var result;
-      var data;
+      //var data;
       var reg;
 
       before(function(done) {
 
         // Setup with statement
-        data = fixtures.registrationOnly();
+        var data = fixtures.registrationWithStatements();
 
         // Params
         var stmt = fixtures.statement_1;
         var stmtId = fixtures.statement_id_1;
 
         // Issue Request Twice
-        client.putStatement(data.registrationId, stmtId, stmt,
+        client.putStatement(data.registrationId, data.statementId, data.statement,
           function(response) {
-            client.putStatement(data.registrationId, stmtId, stmt,
-              function(response) {
-                result = response;
-                done();
-              });
-        });
+            result = response;
+            done();
+          }
+        );
 
       });
 
