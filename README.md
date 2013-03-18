@@ -5,7 +5,7 @@
 Project Home: <https://github.com/Ken-Richard/tincan_nodejs>
 
 Implementation of the
-[ADL Experience API](http://example.com/)
+[ADL Experience API](https://github.com/adlnet/xAPI-Spec/blob/master/xAPI.md)
 
 ## Overview
 
