@@ -2,16 +2,17 @@
 
 `NOTE: This is an experiment and not finished.`
 
+Project Home: <https://github.com/Ken-Richard/tincan_nodejs>
+
+Implementation of the
+[ADL Experience API](http://example.com/)
+
 ## Overview
 
 The goal is to implement a Learning Record Store for the
 TinCan/Experience API that supports cloud content delivery.
-
 The initial focus is Articulate Storyline which uses the
 alternative syntax (everything is a post) for all transactions.
-
-Implemented with Node.js.
-
 Data is stored in-memory for ease and speed of testing. Database
 drivers will be added once the main transactions are implemented.
 
