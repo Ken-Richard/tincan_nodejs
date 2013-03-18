@@ -1,22 +1,62 @@
 //
 // Extra Logging for Debugging
 //
+// To customize logging - create a file in the root called
+// user-logging.js, with the following contents:
+//
+//    module.exports = function() {
+//      logging = {
+//         headers:      true,
+//         queryParams:  true,
+//         bodyParams:   true,
+//         bodyData:     true,
+//         content:      true
+//      };
+//      return logging;
+//    }();
+
+
+var logging;
+
+try {
+  logging = require('../user-logging.js');
+} catch (e) {
+  logging = {
+    headers:      false,
+    queryParams:  false,
+    bodyParams:   false,
+    bodyData:     false,
+    content:      false
+  };
+}
 
 exports.middleware = function(req, res, next) {
 
-  console.log(req.url + " : QUERY PARAMS:");
-  console.log(req.query);
+  if (logging.headers) {
+    console.log("== HEADERS ========= " + req.url);
+    console.log(req.headers);
+  }
 
-  console.log(req.url + " : BODY PARAMS:");
-  console.log(req.tcapi_body_params);
+  if (logging.queryParams) {
+    console.log("== QUERY PARAMS ========= " + req.url);
+    console.log(req.query);
+  }
 
-  console.log(req.url + " : RAW BODY:");
-  console.log(req.rawBody);
+  if (logging.bodyParams) {
+    console.log("==  BODY PARAMS ========= " + req.url);
+    console.log(req.tcapi_body_params);
+  }
 
-  if (req.tcapi_body_params.content) {
-    console.log(req.url + " : BODY CONTENT:");
-    console.log(req.tcapi_body_params.content)
+  if (logging.bodyData) {
+    console.log("== RAW BODY ========= " + req.url);
+    console.log(req.rawBody);
+  }
+
+  if (logging.contnt) {
+    console.log("== BODY CONTENT ========= " + req.url);
+    console.log(req.tcapi_body_params.content);
   }
 
   next();
-}
+};
+
