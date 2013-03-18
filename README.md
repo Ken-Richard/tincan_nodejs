@@ -48,3 +48,7 @@ end point.
 2. Middleware for CORS and HTTP Verb Overrides
 3. Middleware for Parameter & Content Processing
 4. Controllers for State & Statemet
+
+## Open Tasks
+
+<https://github.com/Ken-Richard/tincan_nodejs/blob/master/TODO.md>
