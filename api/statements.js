@@ -20,9 +20,10 @@ module.exports = function() {
   //
   app.put('/', function(req, res) {
 
-    var reg = req.findRegistration(res);
-    var statementId = req.tcapi_statement_id();
-    var statementData = reg && statementId ? reg.getStatement(statementId) : null;
+    var context = req.tcapi_context();
+    var reg = db.getRegistration(context.registrationId);
+    var statementId = context.statementId;
+    var statementData = reg && statementId ? db.getStatement(context) : null;
     var data = JSON.parse(req.tcapi_body_params.content);
 
     if (reg && statementId && statementData) {
@@ -30,7 +31,7 @@ module.exports = function() {
       res.send(409);
     } else if (reg && statementId) {
       // Good Request
-      reg.addStatement(statementId,data);
+      db.addStatement(context,data);
       res.send(204);
     } else {
       res.send(404);
@@ -47,15 +48,16 @@ module.exports = function() {
   //
   app.get('/', function(req, res) {
 
-    var reg = req.findRegistration(res);
-    var statementId = req.tcapi_statement_id();
-    var statementData = reg && statementId ? reg.getStatement(statementId) : null;
+    var context = req.tcapi_context();
+    var reg = db.getRegistration(context.registrationId);
+    var statementId = context.statementId;
+    var statementData = reg && statementId ? db.getStatement(context) : null;
 
     if (reg && statementId && statementData) {
       res.send(statementData);
     } else if (reg && !statementId) {
       var data = {
-        statements: reg.allStatements()
+        statements: db.findStatements(context)
       };
       res.send(JSON.stringify(data));
     } else {

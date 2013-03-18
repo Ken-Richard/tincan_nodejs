@@ -4,6 +4,8 @@
 // Specification:
 // https://github.com/adlnet/xAPI-Spec/blob/master/xAPI.md#74-state-api
 
+var db = require('../config/database.js').driver;
+
 module.exports = function() {
 
   var express = require('express');
@@ -17,14 +19,15 @@ module.exports = function() {
   //
   app.get('/', function(req, res) {
 
-    var reg = req.findRegistration(res);
-    var stateId = req.tcapi_state_id();
-    var stateData = reg && stateId ? reg.getState(stateId) : null;
+    var context = req.tcapi_context();
+    var reg = db.getRegistration(context.registrationId);
+    var stateId = context.stateId;
+    var stateData = reg && stateId ? db.getState(context) : null;
 
     if (reg && stateId && stateData) {
       res.send(stateData);
     } else if (reg && !stateId) {
-      res.send(JSON.stringify(reg.getStateKeys()));
+      res.send(JSON.stringify(db.getStateKeys(context)));
     } else {
       res.send(404);
     }
@@ -37,12 +40,13 @@ module.exports = function() {
   //
   app.put('/', function(req, res) {
 
-    var reg = req.findRegistration();
-    var stateId = req.tcapi_state_id();
+    var context = req.tcapi_context();
+    var reg = db.getRegistration(context.registrationId);
+    var stateId = context.stateId;
     var stateData = req.tcapi_body_params.content;
 
     if (reg) {
-      reg.setState(stateId,stateData);
+      db.setState(context,stateData);
       res.send(204);
     } else {
       res.send(404);
@@ -56,15 +60,16 @@ module.exports = function() {
   //
   app.delete('/', function(req, res) {
 
-    var reg = req.findRegistration(res);
-    var stateId = req.tcapi_state_id();
-    var stateData = reg && stateId ? reg.getState(stateId) : null;
+    var context = req.tcapi_context();
+    var reg = db.getRegistration(context.registrationId);
+    var stateId = context.stateId;
+    var stateData = reg && stateId ? db.getState(context) : null;
 
     if (reg && stateId && stateData) {
-      reg.deleteState(stateId);
+      db.deleteState(context);
       res.send(204);
     } else if (reg && !stateId) {
-      reg.deleteState();
+      db.deleteState(context);
       res.send(204);
     } else {
       res.send(404);

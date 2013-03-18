@@ -1,91 +1,14 @@
 //
-// Registration Class
+// Simple In-Memory Data Store
 //
+
+var registrations = {};
 
 function Registration(id) {
-
-  //
-  // Registration Fields
-  //
-
   this.id = id;
-
-
-
-  //
-  // State Data
-  //
-
   this.states = {};
-
-  this.setState = function(id,data) {
-    this.states[id] = data;
-  };
-
-  this.getState = function(id) {
-    return this.states[id];
-  };
-
-  this.getStateKeys = function() {
-    return Object.keys(this.states);
-  };
-
-  this.deleteState = function(id) {
-    if (id) {
-      delete this.states[id];
-    } else {
-      this.states = {};
-    }
-  };
-
-
-  //
-  // Statement Data
-  //
-
   this.statements = {};
-
-  this.addStatement = function(id,data) {
-    this.statements[id] = data;
-  };
-
-  this.getStatement = function(id) {
-    return this.statements[id];
-  };
-
-  this.allStatements = function(id) {
-    return this.statements;
-  };
-
-};
-
-
-//
-// Registration Data Store
-//
-var registrations = {};
-var code = "A";
-
-
-//
-// Exports
-//
-
-// All Registrations
-exports.allRegistrations = function() {
-  return registrations;
-};
-
-// Load Specific Registration
-exports.loadRegistration = function(registrationId) {
-  return registrations[registrationId];
-};
-
-exports.createRegistration = function(id) {
-  var reg = new Registration(id);
-  registrations[id] = reg;
-  return reg;
-};
+}
 
 exports.initialize = function() {
   // Test Data
@@ -97,4 +20,75 @@ exports.reset = function() {
   registrations = {};
 };
 
+
+//
+// Public Interface - Registrations
+//
+
+// All Registrations
+exports.allRegistrations = function() {
+  return registrations;
+};
+
+// Load Specific Registration
+exports.getRegistration = function(registrationId) {
+  return registrations[registrationId];
+};
+
+exports.createRegistration = function(id) {
+  var reg = new Registration(id);
+  registrations[id] = reg;
+  return reg;
+};
+
+
+
+//
+// Public Interface - States
+//
+
+exports.getState = function(context) {
+  var reg = registrations[context.registrationId];
+  return reg.states[context.stateId];
+};
+
+exports.getStateKeys = function(context) {
+  var reg = registrations[context.registrationId];
+  return Object.keys(reg.states);
+};
+
+exports.setState = function(context,data) {
+  var reg = registrations[context.registrationId];
+  reg.states[context.stateId] = data;
+};
+
+exports.deleteState = function(context) {
+  var reg = registrations[context.registrationId];
+  if (context.stateId) {
+    delete reg.states[context.stateId];
+  } else {
+    reg.states = {};
+  }
+};
+
+
+
+//
+// Public Interface - Statements
+//
+
+exports.getStatement = function(context) {
+  var reg = registrations[context.registrationId];
+  return reg.statements[context.statementId];
+};
+
+exports.addStatement = function(context,data) {
+  var reg = registrations[context.registrationId];
+  reg.statements[context.statementId] = data;
+};
+
+exports.findStatements = function(context) {
+  var reg = registrations[context.registrationId];
+  return reg.statements;
+};
 

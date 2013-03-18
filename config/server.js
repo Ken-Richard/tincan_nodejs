@@ -23,7 +23,7 @@ module.exports = function() {
   app.use('/xAPI/activities/state', require('../api/state.js'));
 
   // Debug Page
-  app.use('/debug', require('../api/debug.js'));
+  app.use('/debug', require('../debug/debug.js'));
 
   return app;
 

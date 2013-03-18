@@ -61,8 +61,8 @@ exports.registrationOnly = function() {
 exports.registrationWithStates = function() {
   var data = exports.registrationOnly();
   var reg = data.registration;
-  reg.setState('state-id-a',"STATE-DATA-A");
-  reg.setState('state-id-b',"STATE-DATA-B");
+  reg.states['state-id-a'] = "STATE-DATA-A";
+  reg.states['state-id-b'] = "STATE-DATA-B";
   return {
     registrationId: reg.id,
     registration: reg,
@@ -75,8 +75,8 @@ exports.registrationWithStates = function() {
 exports.registrationWithStatements = function() {
   var data = exports.registrationOnly();
   var reg = data.registration;
-  reg.addStatement(exports.statement_id_1, exports.statement_1);
-  reg.addStatement(exports.statement_id_2, exports.statement_2);
+  reg.statements[exports.statement_id_1] = exports.statement_1;
+  reg.statements[exports.statement_id_2] = exports.statement_2;
   return {
     registrationId: reg.id,
     registration: reg,

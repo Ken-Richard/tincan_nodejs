@@ -68,8 +68,9 @@ describe('State API', function() {
 
       it('should change the state', function() {
         result.should.have.property('statusCode', 204);
-        console.log(reg.getStateKeys());
-        var state = reg.getState("my-state-id");
+        var context = data;
+        context.stateId = 'my-state-id';
+        var state = db.getState(context);
         state.should.equal('my-new-state-data');
       });
 
@@ -87,7 +88,7 @@ describe('State API', function() {
         data = fixtures.registrationWithStates();
         reg = data.registration;
 
-        var state = reg.getState(data.stateId);
+        var state = db.getState(data);
         state.should.equal('STATE-DATA-A');
 
         // Issue Request
@@ -103,8 +104,8 @@ describe('State API', function() {
 
       it('should change the state', function() {
         result.should.have.property('statusCode', 204);
-        var reg = db.loadRegistration(data.registrationId);
-        var state = reg.getState(data.stateId);
+        var reg = db.getRegistration(data.registrationId);
+        var state = db.getState(data);
         state.should.equal('replaced-state-data');
       });
 
