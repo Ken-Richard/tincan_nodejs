@@ -90,11 +90,13 @@ exports.createRegistration = function(id) {
 
 exports.initialize = function() {
   // Test Data
-  return exports.createRegistration('b9855f24-2140-4fb8-931d-2a37cf412c2e');
+  return exports.createRegistration('SAMPLE-REGISTRATION-ID');
 };
 
 exports.reset = function() {
   console.log("*** RESET DATABASE ***");
   registrations = {};
 };
+
+
 
