@@ -1,0 +1,2 @@
+/* Fill in your datails & rename to aes.json. Don't commit your credentials to GitHub */
+{ "accessKeyId": "akid", "secretAccessKey": "secret", "region": "us-west-2" }

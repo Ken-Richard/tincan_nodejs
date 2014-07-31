@@ -74,9 +74,21 @@ module.exports = function() {
       var stateId = context.stateId;
       db.getState(context,function(stateData) {
         if (reg && stateId && stateData) {
-          db.deleteState(context, function() { res.send(204);} );
+          db.deleteState(context, function(response) { 
+            if (response) {
+              res.send(204);
+            } else {
+              res.send(404);    
+            }
+          });
         } else if (reg && !stateId) {
-          db.deleteState(context, function() { res.send(204); });
+          db.deleteState(context, function() { 
+            if (response) {
+              res.send(204);
+            } else {
+              res.send(404);    
+            }
+          });
         } else {
           res.send(404);
         }        

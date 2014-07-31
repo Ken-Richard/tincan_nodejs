@@ -81,12 +81,16 @@ exports.setState = function(context,data, callback) {
 
 exports.deleteState = function(context, callback) {
   var reg = registrations[context.registrationId];
-  if (context.stateId) {
-    delete reg.states[context.stateId];
+  if (reg==null) {
+    callback(null);
   } else {
-    reg.states = {};
+    if (context.stateId) {
+      delete reg.states[context.stateId];
+    } else {
+      reg.states = {};
+    }
+    callback(true);
   }
-  callback();
 };
 
 
