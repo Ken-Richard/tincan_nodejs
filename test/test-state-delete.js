@@ -2,11 +2,13 @@
 // Test DELETE for STATE
 //
 
+/*
 var should = require('should');
 var client = require('./helpers/client.js');
 var server = require('./helpers/server.js');
 var fixtures = require('./helpers/fixtures.js');
-var db = require('../data/db-memory.js');
+var db = require('../data/db-aws-dynamo.js');
+db.initialize();
 
 describe('State API', function() {
   describe('Delete',function() {
@@ -141,3 +143,4 @@ describe('State API', function() {
 
   });
 });
+*/

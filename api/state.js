@@ -82,7 +82,7 @@ module.exports = function() {
             }
           });
         } else if (reg && !stateId) {
-          db.deleteState(context, function() { 
+          db.deleteState(context, function(response) { 
             if (response) {
               res.send(204);
             } else {

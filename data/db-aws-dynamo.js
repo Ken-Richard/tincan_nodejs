@@ -12,6 +12,7 @@ function Registration(id) {
 }
 
 exports.initialize = function(callback) {
+  exports.createRegistration('SAMPLE-REGISTRATION-ID', function() {});
 };
 
 exports.reset = function() {
@@ -25,13 +26,27 @@ exports.allRegistrations = function() {
 
 
 //
-// Response Handler
+// Response Helpers
 //
+
+function isEmpty(map) {
+   for(var key in map) {
+      if (map.hasOwnProperty(key)) {
+         return false;
+      }
+   }
+   return true;
+}
+
 function responseHelper(err, data, callback) {
   if (err) {
     console.log(err, err.stack);
     throw err;
+  } else if (isEmpty(data)) {
+    console.log("No Data");
+    callback(null);
   } else {
+    console.log(data);
     callback(data);
   }
 }
@@ -52,13 +67,15 @@ exports.getRegistration = function(registrationId, callback) {
     },
     TableName: 'xapi-registrations'
   }
+
   dynamodb.getItem(params, function(err, data) {
+    data = data ? data['Item'] : null;
     responseHelper(err, data, callback);
   });
 
 };
 
-exports.createRegistration = function(id, callback) {
+exports.createRegistration = function(registrationId, callback) {
 
   console.log("createRegistration")
   var data = { registrationId: registrationId };
@@ -94,6 +111,9 @@ exports.getState = function(context, callback) {
   }
 
   dynamodb.getItem(params, function(err, data) {
+    data = data ? data['Item'] : null;
+    data = data ? data['state_data'] : null;
+    data = data ? data['S'] : null;
     responseHelper(err, data, callback);
   });
 
@@ -119,18 +139,19 @@ exports.getStateKeys = function(context, callback) {
 exports.setState = function(context, data, callback) {
 
   console.log("setState")
-  var data = { registrationId: registrationId };
+  console.log(data);
+
   var dynamodb = new AWS.DynamoDB();
   var params = {
     Item: {
-      registration_id: { 'S': registrationId },
+      registration_id: { 'S': context.registrationId },
       state_id:        { 'S': context.stateId },
-      state_data:      { 'S': JSON.stringify(data) }
+      state_data:      { 'S': data }
     },
     TableName: 'xapi-states'
   }
 
-  dynamodb.getItem(params, function(err, data) {
+  dynamodb.putItem(params, function(err, data) {
     responseHelper(err, data, callback);
   });
 
@@ -166,21 +187,22 @@ exports.getStatement = function(context, callback) {
 
 };
 
-exports.addStatement = function(context,data) {
+exports.addStatement = function(context, data, callback) {
 
   console.log("addStatement")
-  var data = { registrationId: registrationId };
+  console.log(data);
+
   var dynamodb = new AWS.DynamoDB();
   var params = {
     Item: {
-      registration_id: { 'S': registrationId },
+      registration_id: { 'S': context.registrationId },
       statement_id:    { 'S': context.statementId },
       statement_data:  { 'S': JSON.stringify(data) }
     },
     TableName: 'xapi-statements'
   }
 
-  dynamodb.getItem(params, function(err, data) {
+  dynamodb.putItem(params, function(err, data) {
     responseHelper(err, data, callback);
   });
 

@@ -6,9 +6,11 @@ var should = require('should');
 var client = require('./helpers/client.js');
 var server = require('./helpers/server.js');
 var fixtures = require('./helpers/fixtures.js');
-var db = require('../data/db-memory.js');
+var db = require('../data/db-aws-dynamo.js');
+db.initialize();
 
 describe('State API', function() {
+
   describe('Get',function() {
 
     before(function(done) {
@@ -20,9 +22,7 @@ describe('State API', function() {
     });
 
     describe('Invalid Registration', function() {
-
       var result;
-
       before(function(done) {
         client.getState('bogus-registration', 'bogus-activity', 'bogus-state', fixtures.actor,
           function(response) {
@@ -67,7 +67,6 @@ describe('State API', function() {
     });
 
 
-
     describe('Specific State', function() {
 
       var result;
@@ -96,6 +95,7 @@ describe('State API', function() {
     });
 
 
+/*
 
     describe('List of State IDs', function() {
 
@@ -124,6 +124,7 @@ describe('State API', function() {
 
     });
 
+    */
 
   });
 });

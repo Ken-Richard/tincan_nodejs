@@ -32,8 +32,9 @@ module.exports = function() {
           res.send(409);
         } else if (reg && statementId) {
           // Good Request
-          db.addStatement(context,data);
-          res.send(204);
+          db.addStatement(context, data, function(data) {
+            res.send(204);  
+          });
         } else {
           res.send(404);
         }
