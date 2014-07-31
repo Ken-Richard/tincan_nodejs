@@ -50,19 +50,23 @@ describe('Statement API', function() {
       before(function(done) {
 
         // Setup with statement
-        data = fixtures.registrationOnly();
+        fixtures.registrationOnly(function(d) {
 
-        // Params
-        var stmt = fixtures.statement_1;
-        var stmtId = fixtures.statement_id_1;
+          data = d;
 
-        // Issue Request
-        client.putStatement(data.registrationId, stmtId, stmt,
-          function(response) {
-            result = response;
-            done();
-          }
-        );
+          // Params
+          var stmt = fixtures.statement_1;
+          var stmtId = fixtures.statement_id_1;
+
+          // Issue Request
+          client.putStatement(data.registrationId, stmtId, stmt,
+            function(response) {
+              result = response;
+              done();
+            }
+          );
+
+        });
 
       });
 
@@ -75,25 +79,25 @@ describe('Statement API', function() {
     describe('New with Duplicate', function() {
 
       var result;
-      //var data;
       var reg;
 
       before(function(done) {
 
         // Setup with statement
-        var data = fixtures.registrationWithStatements();
+        fixtures.registrationWithStatements(function(data) {
+          // Params
+          var stmt = fixtures.statement_1;
+          var stmtId = fixtures.statement_id_1;
 
-        // Params
-        var stmt = fixtures.statement_1;
-        var stmtId = fixtures.statement_id_1;
+          // Issue Request Twice
+          client.putStatement(data.registrationId, data.statementId, data.statement,
+            function(response) {
+              result = response;
+              done();
+            }
+          );
 
-        // Issue Request Twice
-        client.putStatement(data.registrationId, data.statementId, data.statement,
-          function(response) {
-            result = response;
-            done();
-          }
-        );
+        });
 
       });
 

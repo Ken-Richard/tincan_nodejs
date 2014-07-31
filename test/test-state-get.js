@@ -46,15 +46,17 @@ describe('State API', function() {
       before(function(done) {
 
         // Setup Single Registration witout state
-        var data = fixtures.registrationOnly();
+        fixtures.registrationOnly(function(data) {
 
-        // Issue Request
-        client.getState(data.registrationId, 'bogus-activity', 'bogus-state', fixtures.actor,
-          function(response) {
-            result = response;
-            done();
-          }
-        );
+          // Issue Request
+          client.getState(data.registrationId, 'bogus-activity', 'bogus-state', fixtures.actor,
+            function(response) {
+              result = response;
+              done();
+            }
+          );
+
+        });
 
       });
 
@@ -74,14 +76,16 @@ describe('State API', function() {
       before(function(done) {
 
         // Setup a registration with a state
-        data = fixtures.registrationWithStates();
+        fixtures.registrationWithStates(function(d) {
+          data = d
+          client.getState(data.registrationId, data.activityId, data.stateId, fixtures.actor,
+            function(response) {
+              result = response;
+              done();
+            }
+          );
+        });
 
-        client.getState(data.registrationId, data.activityId, data.stateId, fixtures.actor,
-          function(response) {
-            result = response;
-            done();
-          }
-        );
       });
 
       it('should return the state data', function() {
@@ -101,14 +105,16 @@ describe('State API', function() {
       before(function(done) {
 
         // Setup a registration with a state
-        data = fixtures.registrationWithStates();
+        fixtures.registrationWithStates(function(d) {
+          data = d;
+          client.getState(data.registrationId, data.activityId, null, fixtures.actor,
+            function(response) {
+              result = response;
+              done();
+            }
+          );          
+        });
 
-        client.getState(data.registrationId, data.activityId, null, fixtures.actor,
-          function(response) {
-            result = response;
-            done();
-          }
-        );
       });
 
       it('should return the state data', function() {

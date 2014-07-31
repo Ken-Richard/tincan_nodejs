@@ -20,17 +20,22 @@ module.exports = function() {
   app.get('/', function(req, res) {
 
     var context = req.tcapi_context();
-    var reg = db.getRegistration(context.registrationId);
-    var stateId = context.stateId;
-    var stateData = reg && stateId ? db.getState(context) : null;
+    db.getRegistration(context.registrationId, function(reg) {
 
-    if (reg && stateId && stateData) {
-      res.send(stateData);
-    } else if (reg && !stateId) {
-      res.send(JSON.stringify(db.getStateKeys(context)));
-    } else {
-      res.send(404);
-    }
+      var stateId = context.stateId;
+      db.getState(context, function(stateData) {
+        if (reg && stateId && stateData) {
+          res.send(stateData);
+        } else if (reg && !stateId) {
+          db.getStateKeys(context, function(keys) {
+            res.send(JSON.stringify(keys));
+          });
+        } else {
+          res.send(404);
+        }        
+      })
+
+    });
 
   });
 
@@ -41,17 +46,20 @@ module.exports = function() {
   app.put('/', function(req, res) {
 
     var context = req.tcapi_context();
-    var reg = db.getRegistration(context.registrationId);
-    var stateId = context.stateId;
-    var stateData = req.tcapi_body_params.content;
+    db.getRegistration(context.registrationId, function(reg) {
 
-    if (reg) {
-      db.setState(context,stateData);
-      res.send(204);
-    } else {
-      res.send(404);
-    }
+      var stateId = context.stateId;
+      var stateData = req.tcapi_body_params.content;
 
+      if (reg) {
+        db.setState(context,stateData, function() {
+          res.send(204);  
+        });
+      } else {
+        res.send(404);
+      }
+
+    });
   });
 
 
@@ -61,19 +69,19 @@ module.exports = function() {
   app.delete('/', function(req, res) {
 
     var context = req.tcapi_context();
-    var reg = db.getRegistration(context.registrationId);
-    var stateId = context.stateId;
-    var stateData = reg && stateId ? db.getState(context) : null;
+    db.getRegistration(context.registrationId, function(reg) {
 
-    if (reg && stateId && stateData) {
-      db.deleteState(context);
-      res.send(204);
-    } else if (reg && !stateId) {
-      db.deleteState(context);
-      res.send(204);
-    } else {
-      res.send(404);
-    }
+      var stateId = context.stateId;
+      db.getState(context,function(stateData) {
+        if (reg && stateId && stateData) {
+          db.deleteState(context, function() { res.send(204);} );
+        } else if (reg && !stateId) {
+          db.deleteState(context, function() { res.send(204); });
+        } else {
+          res.send(404);
+        }        
+      })
+    });
 
   });
 

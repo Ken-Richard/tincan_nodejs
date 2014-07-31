@@ -48,39 +48,42 @@ exports.statement_2 = {
   }
 };
 
-exports.registrationOnly = function() {
+exports.registrationOnly = function(callback) {
   db.reset();
-  var reg = db.createRegistration('registration-id');
-  return {
-    registrationId: reg.id,
-    registration: reg,
-    activityId: 'activity-id'
-  };
+  db.createRegistration('registration-id', function(reg) {
+    callback({
+      registrationId: reg.id,
+      registration: reg,
+      activityId: 'activity-id'
+    });   
+  });
 };
 
-exports.registrationWithStates = function() {
-  var data = exports.registrationOnly();
-  var reg = data.registration;
-  reg.states['state-id-a'] = "STATE-DATA-A";
-  reg.states['state-id-b'] = "STATE-DATA-B";
-  return {
-    registrationId: reg.id,
-    registration: reg,
-    activityId: 'activity-id',
-    stateId: 'state-id-a',
-    stateValue: 'STATE-DATA-A'
-  };
+exports.registrationWithStates = function(callback) {
+  exports.registrationOnly(function(data) {
+    var reg = data.registration;
+    reg.states['state-id-a'] = "STATE-DATA-A";
+    reg.states['state-id-b'] = "STATE-DATA-B";
+    callback({
+      registrationId: reg.id,
+      registration: reg,
+      activityId: 'activity-id',
+      stateId: 'state-id-a',
+      stateValue: 'STATE-DATA-A'
+    });
+  });
 };
 
-exports.registrationWithStatements = function() {
-  var data = exports.registrationOnly();
-  var reg = data.registration;
-  reg.statements[exports.statement_id_1] = exports.statement_1;
-  reg.statements[exports.statement_id_2] = exports.statement_2;
-  return {
-    registrationId: reg.id,
-    registration: reg,
-    statementId: exports.statement_id_1,
-    statement: { name: exports.statement_1 }
-  };
+exports.registrationWithStatements = function(callback) {
+  exports.registrationOnly(function(data) {
+    var reg = data.registration;
+    reg.statements[exports.statement_id_1] = exports.statement_1;
+    reg.statements[exports.statement_id_2] = exports.statement_2;
+    callback({
+      registrationId: reg.id,
+      registration: reg,
+      statementId: exports.statement_id_1,
+      statement: { name: exports.statement_1 }
+    });
+  });
 };

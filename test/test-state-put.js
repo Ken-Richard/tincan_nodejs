@@ -27,7 +27,9 @@ describe('State API', function() {
 
       before(function(done) {
 
-        data = fixtures.registrationWithStates();
+      fixtures.registrationWithStates(function(d) {
+        data = d;
+      
         reg = data.registration;
 
         client.putState('bogus-reg-id', 'bugus-activity-id', 'bogus-state-id',
@@ -37,6 +39,9 @@ describe('State API', function() {
             done();
           }
         );
+
+        });
+
       });
 
       it('should return an 404 error', function() {
@@ -53,25 +58,26 @@ describe('State API', function() {
       var reg;
 
       before(function(done) {
-
-        data = fixtures.registrationWithStates();
-        reg = data.registration;
-
-        client.putState(data.registrationId, data.activityId, 'my-state-id', fixtures.actor,
-          "my-new-state-data",
-          function(response) {
-            result = response;
-            done();
-          }
-        );
+        fixtures.registrationWithStates(function(d) {
+          data = d;
+          reg = data.registration;
+          client.putState(data.registrationId, data.activityId, 'my-state-id', fixtures.actor,
+            "my-new-state-data",
+            function(response) {
+              result = response;
+              done();
+            }
+          );
+        });
       });
 
       it('should change the state', function() {
         result.should.have.property('statusCode', 204);
         var context = data;
         context.stateId = 'my-state-id';
-        var state = db.getState(context);
-        state.should.equal('my-new-state-data');
+        db.getState(context,function(state) {
+          state.should.equal('my-new-state-data');  
+        });
       });
 
     });
@@ -85,28 +91,34 @@ describe('State API', function() {
 
       before(function(done) {
 
-        data = fixtures.registrationWithStates();
-        reg = data.registration;
+        fixtures.registrationWithStates(function(d) {
+          data = d;
+          reg = data.registration;
 
-        var state = db.getState(data);
-        state.should.equal('STATE-DATA-A');
+          db.getState(data, function(state) {
+            state.should.equal('STATE-DATA-A');  
+          });
+          
+          // Issue Request
+          client.putState(data.registrationId, data.activityId, data.stateId, fixtures.actor,
+            "replaced-state-data",
+            function(response) {
+              result = response;
+              done();
+            }
+          );
 
-        // Issue Request
-        client.putState(data.registrationId, data.activityId, data.stateId, fixtures.actor,
-          "replaced-state-data",
-          function(response) {
-            result = response;
-            done();
-          }
-        );
+        });
 
       });
 
       it('should change the state', function() {
         result.should.have.property('statusCode', 204);
-        var reg = db.getRegistration(data.registrationId);
-        var state = db.getState(data);
-        state.should.equal('replaced-state-data');
+        db.getRegistration(data.registrationId,function(reg) {
+          db.getState(data, function(state) {
+            state.should.equal('replaced-state-data');  
+          });
+        });
       });
 
     });

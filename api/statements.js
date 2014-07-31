@@ -21,21 +21,26 @@ module.exports = function() {
   app.put('/', function(req, res) {
 
     var context = req.tcapi_context();
-    var reg = db.getRegistration(context.registrationId);
-    var statementId = context.statementId;
-    var statementData = reg && statementId ? db.getStatement(context) : null;
-    var data = JSON.parse(req.tcapi_body_params.content);
+    db.getRegistration(context.registrationId, function(reg) {
 
-    if (reg && statementId && statementData) {
-      // Already Exits - Error per Spec
-      res.send(409);
-    } else if (reg && statementId) {
-      // Good Request
-      db.addStatement(context,data);
-      res.send(204);
-    } else {
-      res.send(404);
-    }
+      var statementId = context.statementId;
+      db.getStatement(context, function(statementData) {
+        var data = JSON.parse(req.tcapi_body_params.content);
+
+        if (reg && statementId && statementData) {
+          // Already Exits - Error per Spec
+          res.send(409);
+        } else if (reg && statementId) {
+          // Good Request
+          db.addStatement(context,data);
+          res.send(204);
+        } else {
+          res.send(404);
+        }
+
+      })
+
+    });
 
   });
 
@@ -49,20 +54,24 @@ module.exports = function() {
   app.get('/', function(req, res) {
 
     var context = req.tcapi_context();
-    var reg = db.getRegistration(context.registrationId);
-    var statementId = context.statementId;
-    var statementData = reg && statementId ? db.getStatement(context) : null;
+    db.getRegistration(context.registrationId, function(reg) {
 
-    if (reg && statementId && statementData) {
-      res.send(statementData);
-    } else if (reg && !statementId) {
-      var data = {
-        statements: db.findStatements(context)
-      };
-      res.send(JSON.stringify(data));
-    } else {
-      res.send(404);
-    }
+      var statementId = context.statementId;
+      db.getStatement(context, function(statementData) {
+        if (reg && statementId && statementData) {
+          res.send(statementData);
+        } else if (reg && !statementId) {
+          db.findStatements(context, function(stmts) {
+            var data = {
+              statements: stmts
+            };
+            res.send(JSON.stringify(data));            
+          })
+        } else {
+          res.send(404);
+        }
+      });
+    });
 
   });
 

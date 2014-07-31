@@ -44,13 +44,14 @@ describe('Statement API', function() {
       before(function(done) {
 
         // Setup Single Registration witout state
-        var data = fixtures.registrationWithStatements();
-
-        // Issue Request
-        client.getStatement(data.registrationId, data.statementId, function(response) {
-          result = response;
-          done();
+        fixtures.registrationWithStatements(function(data) {
+          // Issue Request
+          client.getStatement(data.registrationId, data.statementId, function(response) {
+            result = response;
+            done();
+          });          
         });
+
       });
 
       it('should return an 404 error', function() {
@@ -68,13 +69,14 @@ describe('Statement API', function() {
       before(function(done) {
 
         // Setup Single Registration witout state
-        var data = fixtures.registrationWithStatements();
-
-        // Issue Request
-        client.getStatement(data.registrationId, null, function(response) {
-          result = response;
-          done();
+        fixtures.registrationWithStatements(function(data) {
+          // Issue Request
+          client.getStatement(data.registrationId, null, function(response) {
+            result = response;
+            done();
+          });          
         });
+
       });
 
       it('should not return an error', function() {

@@ -37,18 +37,6 @@ exports.middleware = function(req, res, next) {
     return context.build(req);
   };
 
-
-
-  //
-  // Database Helpers
-  //
-  req.findRegistration = function() {
-    var regId = this.tcapi_registration_id();
-    var registration = this.db.getRegistration(regId);
-    return registration;
-  };
-
-
   next();
 
 };

@@ -46,15 +46,17 @@ describe('State API', function() {
       before(function(done) {
 
         // Setup Single Registration witout state
-        var data = fixtures.registrationOnly();
+        fixtures.registrationOnly(function(data) {
 
-        // Issue Request
-        client.deleteState(data.registrationId, 'bogus-activity', 'bogus-state', fixtures.actor,
-          function(response) {
-            result = response;
-            done();
-          }
-        );
+          // Issue Request
+          client.deleteState(data.registrationId, 'bogus-activity', 'bogus-state', fixtures.actor,
+            function(response) {
+              result = response;
+              done();
+            }
+          );
+
+        });
 
       });
 
@@ -74,20 +76,30 @@ describe('State API', function() {
       before(function(done) {
 
         // Setup a registration with a state
-        data = fixtures.registrationWithStates();
-        db.getStateKeys(data).length.should.equal(2);
+        fixtures.registrationWithStates(function(d) {
 
-        client.deleteState(data.registrationId, data.activityId, data.stateId, fixtures.actor,
-          function(response) {
-            result = response;
-            done();
-          }
-        );
-      });
+          data = d;
 
-      it('should return the state data', function() {
-        result.should.have.property('statusCode', 204);
-        db.getStateKeys(data).length.should.equal(1);
+          db.getStateKeys(data, function(keys) {
+            keys.length.should.equal(2);
+          });
+
+          client.deleteState(data.registrationId, data.activityId, data.stateId, fixtures.actor,
+            function(response) {
+              result = response;
+              done();
+            }
+          );
+
+        });
+
+        it('should return the state data', function() {
+          result.should.have.property('statusCode', 204);
+          db.getStateKeys(data, function(keys) {
+            keys.length.should.equal(1);
+          });          
+        });
+
       });
 
     });
@@ -102,20 +114,26 @@ describe('State API', function() {
       before(function(done) {
 
         // Setup a registration with a state
-        data = fixtures.registrationWithStates();
-        db.getStateKeys(data).length.should.equal(2);
+        fixtures.registrationWithStates(function(d) {
+          data = d
+          db.getStateKeys(data, function(keys) {
+            keys.length.should.equal(2);
+          });          
+          client.deleteState(data.registrationId, data.activityId, null, fixtures.actor,
+            function(response) {
+              result = response;
+              done();
+            }
+          );
 
-        client.deleteState(data.registrationId, data.activityId, null, fixtures.actor,
-          function(response) {
-            result = response;
-            done();
-          }
-        );
+        });
       });
 
       it('should return the state data', function() {
         result.should.have.property('statusCode', 204);
-        db.getStateKeys(data).length.should.equal(0);
+        db.getStateKeys(data, function(keys) {
+          keys.length.should.equal(0);
+        });        
       });
 
     });

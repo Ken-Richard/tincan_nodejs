@@ -28,13 +28,15 @@ describe('Statement API', function() {
       before(function(done) {
 
         // Setup Single Registration witout state
-        var data = fixtures.registrationWithStatements();
-
-        // Issue Request
-        client.deleteStatement(data.registrationId, data.statementId, function(response) {
-          result = response;
-          done();
+        fixtures.registrationWithStatements(function(data) {
+          
+          // Issue Request
+          client.deleteStatement(data.registrationId, data.statementId, function(response) {
+            result = response;
+            done();
+          });          
         });
+
       });
 
       it('should return an 400 bad request error', function() {

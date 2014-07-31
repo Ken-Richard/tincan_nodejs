@@ -10,9 +10,9 @@ function Registration(id) {
   this.statements = {};
 }
 
-exports.initialize = function() {
+exports.initialize = function(callback) {
   // Test Data
-  return exports.createRegistration('SAMPLE-REGISTRATION-ID');
+  exports.createRegistration('SAMPLE-REGISTRATION-ID', function() {});
 };
 
 exports.reset = function() {
@@ -25,20 +25,20 @@ exports.reset = function() {
 // Public Interface - Registrations
 //
 
-// All Registrations
+// All Registrations - Just for Debugging
 exports.allRegistrations = function() {
   return registrations;
 };
 
 // Load Specific Registration
-exports.getRegistration = function(registrationId) {
-  return registrations[registrationId];
+exports.getRegistration = function(registrationId, callback) {
+  callback(registrations[registrationId]);
 };
 
-exports.createRegistration = function(id) {
+exports.createRegistration = function(id, callback) {
   var reg = new Registration(id);
   registrations[id] = reg;
-  return reg;
+  callback(reg);
 };
 
 
@@ -47,28 +47,46 @@ exports.createRegistration = function(id) {
 // Public Interface - States
 //
 
-exports.getState = function(context) {
-  var reg = registrations[context.registrationId];
-  return reg.states[context.stateId];
+exports.getState = function(context, callback) {
+  if (context.registrationId==null) {
+    callback(null);
+  } else {
+    var reg = registrations[context.registrationId];
+    if (reg) {
+      callback(reg.states[context.stateId]);
+    } else {
+      callback(null);
+    }
+  }
 };
 
-exports.getStateKeys = function(context) {
-  var reg = registrations[context.registrationId];
-  return Object.keys(reg.states);
+exports.getStateKeys = function(context, callback) {
+  if (context.registrationId==null) {
+    callback(null);
+  } else {
+    var reg = registrations[context.registrationId];
+    if (reg) {
+      callback(Object.keys(reg.states));
+    } else {
+      callback(null);
+    }
+  }
 };
 
-exports.setState = function(context,data) {
+exports.setState = function(context,data, callback) {
   var reg = registrations[context.registrationId];
   reg.states[context.stateId] = data;
+  callback();
 };
 
-exports.deleteState = function(context) {
+exports.deleteState = function(context, callback) {
   var reg = registrations[context.registrationId];
   if (context.stateId) {
     delete reg.states[context.stateId];
   } else {
     reg.states = {};
   }
+  callback();
 };
 
 
@@ -77,9 +95,17 @@ exports.deleteState = function(context) {
 // Public Interface - Statements
 //
 
-exports.getStatement = function(context) {
-  var reg = registrations[context.registrationId];
-  return reg.statements[context.statementId];
+exports.getStatement = function(context, callback) {
+  if (context.registrationId==null) {
+    callback(null);
+  } else {
+    var reg = registrations[context.registrationId];
+    if (reg) {
+      callback(reg.statements[context.statementId]);  
+    } else {
+      callback(null);
+    }
+  }
 };
 
 exports.addStatement = function(context,data) {
@@ -87,8 +113,8 @@ exports.addStatement = function(context,data) {
   reg.statements[context.statementId] = data;
 };
 
-exports.findStatements = function(context) {
+exports.findStatements = function(context, callback) {
   var reg = registrations[context.registrationId];
-  return reg.statements;
+  callback(reg.statements);
 };
 
