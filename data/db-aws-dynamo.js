@@ -257,12 +257,25 @@ exports.addStatement = function(context, data, callback) {
     Item: {
       registration_id: { 'S': context.registrationId },
       statement_id:    { 'S': context.statementId },
-      statement_data:  { 'S': JSON.stringify(data) }
     }
-    // Expected: {
-    //   Exists: false
-    // }
+    /* TODO ,
+    Expected: { Exists: false }    
+    */
   }
+
+  // Break into components
+  for (var key in data) {
+    if (data.hasOwnProperty(key)) {
+      params.Item[key] = { 'S': JSON.stringify(data[key]) };
+    }
+  }
+
+  // Add verb for easier query
+  if (data['verb'] && data['verb']['display'] && data['verb']['display']['en-US']) {
+    params.Item['verb_name'] = { 'S': data['verb']['display']['en-US'] }
+  }
+
+  // console.log(params);
 
   dynamodb.putItem(params, function(err, data) {
     responseHelper(err, data, callback);
