@@ -8,9 +8,6 @@ module.exports = function() {
   // Environment
   require('./environment.js')(app, express);
 
-  // Database
-  db.driver.initialize();
-
   // Middleware
   app.use(require('../middleware/crossdomain.js').middleware);
   app.use(require('../middleware/method.js').middleware);

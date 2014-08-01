@@ -2,7 +2,7 @@
 // Data Fixtures for testing
 //
 
-var db = require('../../data/db-memory.js');
+var db = require('../../config/database.js').driver;
 
 exports.actor = {
   "objectType": "Agent",
@@ -49,41 +49,50 @@ exports.statement_2 = {
 };
 
 exports.registrationOnly = function(callback) {
-  db.reset();
-  db.createRegistration('registration-id', function(reg) {
-    callback({
-      registrationId: reg.id,
-      registration: reg,
-      activityId: 'activity-id'
-    });   
+  db.reset(function() {
+    db.createRegistration('SAMPLE-REGISTRATION-ID', function(reg) {
+      callback(reg);
+    });    
   });
 };
 
 exports.registrationWithStates = function(callback) {
-  exports.registrationOnly(function(data) {
-    var reg = data.registration;
-    reg.states['state-id-a'] = "STATE-DATA-A";
-    reg.states['state-id-b'] = "STATE-DATA-B";
-    callback({
-      registrationId: reg.id,
-      registration: reg,
-      activityId: 'activity-id',
-      stateId: 'state-id-a',
-      stateValue: 'STATE-DATA-A'
+  exports.registrationOnly(function(registrationId) {
+
+    var context_a = { registrationId: registrationId, stateId: 'state-id-a' };
+    db.setState(context_a, "STATE-DATA-A", function(data) {
+
+      var context_b = { registrationId: registrationId, stateId: 'state-id-b' };
+      db.setState(context_b, "STATE-DATA-B", function(data) {
+        callback({
+          registrationId: registrationId,
+          activityId: 'activity-id',
+          stateId: 'state-id-a',
+          stateValue: 'STATE-DATA-A'
+        });
+      });
+
     });
+
   });
 };
 
 exports.registrationWithStatements = function(callback) {
-  exports.registrationOnly(function(data) {
-    var reg = data.registration;
-    reg.statements[exports.statement_id_1] = exports.statement_1;
-    reg.statements[exports.statement_id_2] = exports.statement_2;
-    callback({
-      registrationId: reg.id,
-      registration: reg,
-      statementId: exports.statement_id_1,
-      statement: { name: exports.statement_1 }
+  exports.registrationOnly(function(registrationId) {
+
+    var context = { registrationId: registrationId, statementId: exports.statement_id_1 };
+    db.addStatement(context, exports.statement_1, function() {
+
+      var context = { registrationId: registrationId, statementId: exports.statement_id_2 };
+      db.addStatement(context, exports.statement_2, function() {
+        callback({
+          registrationId: registrationId,
+          statementId: exports.statement_id_1,
+          statement: { name: exports.statement_1 }
+        });
+      });
+
     });
+
   });
 };

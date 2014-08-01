@@ -2,145 +2,124 @@
 // Test DELETE for STATE
 //
 
-/*
 var should = require('should');
 var client = require('./helpers/client.js');
 var server = require('./helpers/server.js');
 var fixtures = require('./helpers/fixtures.js');
-var db = require('../data/db-aws-dynamo.js');
-db.initialize();
+var db = require('../config/database.js').driver;
 
 describe('State API', function() {
   describe('Delete',function() {
 
-    before(function(done) {
-      server.start(done);
-    });
+    this.timeout(5000);
+    before(function(done) { server.start(done); });
+    after(function(done)  { server.stop(done);  });
 
-    after(function(done) {
-      server.stop(done);
-    });
 
+    ////////////////////////////////////////////////////////////
+    //
+    // Invalid Registration
+    //
     describe('Invalid Registration', function() {
-
       var result;
-
       before(function(done) {
-        client.deleteState('bogus-registration', 'bogus-activity', 'bogus-state', fixtures.actor,
-          function(response) {
-            result = response;
-            done();
-          }
-        );
-      });
-
-      it('should return an 404 error', function() {
-        result.should.have.property('statusCode', 404);
-      });
-
-    });
-
-
-    describe('Invalid State Id', function() {
-
-      var result;
-
-      before(function(done) {
-
-        // Setup Single Registration witout state
-        fixtures.registrationOnly(function(data) {
-
-          // Issue Request
-          client.deleteState(data.registrationId, 'bogus-activity', 'bogus-state', fixtures.actor,
+        db.reset(function() {
+          client.deleteState('bogus-registration', 'bogus-activity', 'bogus-state', fixtures.actor,
             function(response) {
               result = response;
               done();
             }
           );
-
         });
-
       });
-
       it('should return an 404 error', function() {
         result.should.have.property('statusCode', 404);
       });
-
     });
 
 
 
-    describe('Specific State', function() {
+    ////////////////////////////////////////////////////////////
+    //
+    // Invalid State ID
+    //
+    describe('Invalid State Id', function() {
+      var result;
+      before(function(done) {
+        fixtures.registrationOnly(function(registrationId) {
+          client.deleteState(registrationId, 'bogus-activity', 'bogus-state', fixtures.actor, function(response) {
+            result = response;
+            done();
+          });
+        });
+      });
+      it('should return an 404 error', function() {
+        result.should.have.property('statusCode', 404);
+      });
+    });
 
+
+    ////////////////////////////////////////////////////////////
+    //
+    // Specific State
+    //
+    describe('Specific State', function() {
       var result;
       var data;
-
       before(function(done) {
-
-        // Setup a registration with a state
         fixtures.registrationWithStates(function(d) {
-
           data = d;
-
           db.getStateKeys(data, function(keys) {
             keys.length.should.equal(2);
           });
-
           client.deleteState(data.registrationId, data.activityId, data.stateId, fixtures.actor,
             function(response) {
               result = response;
               done();
             }
           );
-
         });
-
         it('should return the state data', function() {
           result.should.have.property('statusCode', 204);
           db.getStateKeys(data, function(keys) {
             keys.length.should.equal(1);
           });          
         });
-
       });
-
     });
 
 
 
+
+    ////////////////////////////////////////////////////////////
+    //
+    // Get All States
+    //
     describe('All States', function() {
-
       var result;
-      var data;
-
+      var savedData;
       before(function(done) {
-
-        // Setup a registration with a state
-        fixtures.registrationWithStates(function(d) {
-          data = d
+        fixtures.registrationWithStates(function(data) {
+          savedData = data;
           db.getStateKeys(data, function(keys) {
             keys.length.should.equal(2);
-          });          
-          client.deleteState(data.registrationId, data.activityId, null, fixtures.actor,
-            function(response) {
-              result = response;
-              done();
-            }
-          );
-
+            client.deleteState(data.registrationId, data.activityId, null, fixtures.actor,
+              function(response) {
+                result = response;
+                done();
+              }
+            );
+          });
         });
       });
-
       it('should return the state data', function() {
         result.should.have.property('statusCode', 204);
-        db.getStateKeys(data, function(keys) {
+        db.getStateKeys(savedData, function(keys) {
           keys.length.should.equal(0);
         });        
       });
-
     });
 
 
   });
 });
-*/

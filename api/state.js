@@ -23,17 +23,26 @@ module.exports = function() {
     db.getRegistration(context.registrationId, function(reg) {
 
       var stateId = context.stateId;
-      db.getState(context, function(stateData) {
-        if (reg && stateId && stateData) {
-          res.send(stateData);
-        } else if (reg && !stateId) {
-          db.getStateKeys(context, function(keys) {
-            res.send(JSON.stringify(keys));
-          });
-        } else {
-          res.send(404);
-        }        
-      })
+
+      if (stateId==null || stateId.length==0) {
+
+        // Get Keys
+        db.getStateKeys(context, function(keys) {
+          res.send(JSON.stringify(keys));
+        });
+
+      } else {
+
+        // Get State by Key
+        db.getState(context, function(stateData) {
+          if (reg && stateId && stateData) {
+            res.send(stateData);
+          } else {
+            res.send(404);
+          }        
+        });
+
+      }
 
     });
 
@@ -72,30 +81,28 @@ module.exports = function() {
     db.getRegistration(context.registrationId, function(reg) {
 
       var stateId = context.stateId;
-      db.getState(context,function(stateData) {
-        if (reg && stateId && stateData) {
-          db.deleteState(context, function(response) { 
-            if (response) {
-              res.send(204);
-            } else {
-              res.send(404);    
-            }
-          });
-        } else if (reg && !stateId) {
-          db.deleteState(context, function(response) { 
-            if (response) {
-              res.send(204);
-            } else {
-              res.send(404);    
-            }
-          });
-        } else {
-          res.send(404);
-        }        
-      })
-    });
+      if (stateId && stateId.length > 0) {
+        // Verify and Delete
+        db.getState(context,function(stateData) {
+          if (reg && stateId && stateData) {
+            db.deleteState(context, function() { res.send(204);} );
+          } else if (reg && !stateId) {
+            db.deleteState(context, function() { res.send(204); });
+          } else {
+            res.send(404);
+          }        
+        });
+      } else if (reg) {
+        // Delete Range
+        db.deleteState(context, function() { res.send(204);} );
+      } else {
+        // Bad Params
+        res.send(404);
+      }
 
+    });
   });
+
 
 
   //
