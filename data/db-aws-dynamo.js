@@ -104,6 +104,25 @@ exports.deleteRegistration = function(registrationId, callback) {
 };
 
 
+markRegistrationCompleted = function(registrationId, result, callback) {
+
+  var data = { registrationId: registrationId };
+  var dynamodb = new AWS.DynamoDB();
+  var params = {
+    Item: {
+      registration_id: { 'S': registrationId },
+      status:          { 'S': 'completed' },
+      result:          { 'S': JSON.stringify(result) }
+    },
+    TableName: 'xapi-registrations'
+  }
+  dynamodb.putItem(params, function(err, data) {
+    responseHelper(err, registrationId, callback);
+  });
+
+};
+
+
 //
 // Public Interface - States
 //
@@ -247,7 +266,7 @@ exports.getStatement = function(context, callback) {
 
 exports.addStatement = function(context, data, callback) {
 
-  //console.log("addStatement");
+  console.log("addStatement");
 
   // Spec says to throw an error if already exists
 
@@ -263,6 +282,9 @@ exports.addStatement = function(context, data, callback) {
     */
   }
 
+  var verbName = data['verb'];
+  var result = data['result']
+
   // Break into components
   for (var key in data) {
     if (data.hasOwnProperty(key)) {
@@ -270,15 +292,19 @@ exports.addStatement = function(context, data, callback) {
     }
   }
 
-  // Add verb for easier query
-  if (data['verb'] && data['verb']['display'] && data['verb']['display']['en-US']) {
-    params.Item['verb_name'] = { 'S': data['verb']['display']['en-US'] }
-  }
-
-  // console.log(params);
-
   dynamodb.putItem(params, function(err, data) {
-    responseHelper(err, data, callback);
+    responseHelper(err, data, function(data) {
+
+      // Check for completion?
+      if (verbName=='completed') {
+        markRegistrationCompleted(context.registrationId,result,function(not_used) {
+          callback(data);
+        });
+      } else {
+        callback(data);
+      }
+      
+    });
   });
 
 };
