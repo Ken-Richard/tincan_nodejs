@@ -288,7 +288,11 @@ exports.addStatement = function(context, data, callback) {
   // Break into components
   for (var key in data) {
     if (data.hasOwnProperty(key)) {
-      params.Item[key] = { 'S': JSON.stringify(data[key]) };
+      if (key=='verb') {
+        params.Item[key] = { 'S': data[key] };
+      } else {
+        params.Item[key] = { 'S': JSON.stringify(data[key]) };
+      }
     }
   }
 
