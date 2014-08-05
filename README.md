@@ -22,13 +22,26 @@ drivers will be added once the main transactions are implemented.
 2. git clone git@github.com:Ken-Richard/tincan_nodejs.git
 3. cd tincan_nodejs
 4. npm install
-5. node server.js
+
+## Running the server (In-Memory Database)
+
+1. node server.js
 
 Once installed, you can use the sample URL below to run an
 Articulate Storyline course with your local server as an
 end point.
 
 <http://s3.amazonaws.com/aes-media-dev/system/test/effective_teams_tincan/story.html?auth=SAMPLE-AUTHCODE&actor={%22name%22:%20[%22First%20Last%22],%20%22mbox%22:%20[%22mailto:firstlast@mycompany.com%22]}&activity_id=SAMPLE-ACTIVITY-ID&registration=SAMPLE-REGISTRATION-ID&endpoint=http://localhost:3000/xAPI/>
+
+## Running the server (Amazon Dynamo Database)
+
+1. Create three tables in your Amazon DynamoDB Instance. Provision at the lowest levels for the "Free Tier". This should be enough for testing.
+  a. xapi-registrations (Hash Key registration_id)
+  b. xapi-statements (Hash Key registration_id; Range Key statement_id)
+  b. xapi-statements (Hash Key registration_id; Range Key state_id)
+2. Run the server with the following environmental variables.
+
+TC_DB=dynamo S3_KEY=<Key> S3_SECRET=<Secret> S3_REGION=<Region> node server.js
 
 ## Supported Transactions
 
@@ -39,8 +52,11 @@ end point.
 
 ## Testing
 
+Tests use a in-memory dataabase by default. You can also run tests with the Amazon Dynamo DB by setting the environment
+variable. Do this at your own risk - It will create, update and delete data from your tables.
+
 1. npm test
-2. Articulate Storyline
+
 
 ## Implementation Details
 

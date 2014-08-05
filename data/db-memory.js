@@ -10,14 +10,10 @@ function Registration(id) {
   this.statements = {};
 }
 
-exports.initialize = function(callback) {
-  // Test Data
-  exports.createRegistration('SAMPLE-REGISTRATION-ID', function() {});
-};
-
-exports.reset = function() {
+exports.reset = function(callback) {
   console.log("*** RESET DATABASE ***");
   registrations = {};
+  exports.createRegistration('SAMPLE-REGISTRATION-ID', callback);
 };
 
 
@@ -38,7 +34,7 @@ exports.getRegistration = function(registrationId, callback) {
 exports.createRegistration = function(id, callback) {
   var reg = new Registration(id);
   registrations[id] = reg;
-  callback(reg);
+  callback(id);
 };
 
 
@@ -73,7 +69,7 @@ exports.getStateKeys = function(context, callback) {
   }
 };
 
-exports.setState = function(context,data, callback) {
+exports.setState = function(context, data, callback) {
   var reg = registrations[context.registrationId];
   reg.states[context.stateId] = data;
   callback();
@@ -81,12 +77,16 @@ exports.setState = function(context,data, callback) {
 
 exports.deleteState = function(context, callback) {
   var reg = registrations[context.registrationId];
-  if (context.stateId) {
-    delete reg.states[context.stateId];
+  if (reg==null) {
+    callback(null);
   } else {
-    reg.states = {};
+    if (context.stateId) {
+      delete reg.states[context.stateId];
+    } else {
+      reg.states = {};
+    }
+    callback(true);
   }
-  callback();
 };
 
 
@@ -108,9 +108,10 @@ exports.getStatement = function(context, callback) {
   }
 };
 
-exports.addStatement = function(context,data) {
+exports.addStatement = function(context,data,callback) {
   var reg = registrations[context.registrationId];
   reg.statements[context.statementId] = data;
+  callback(data);
 };
 
 exports.findStatements = function(context, callback) {

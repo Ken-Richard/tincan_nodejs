@@ -8,41 +8,33 @@ var should = require('should');
 var client = require('./helpers/client.js');
 var server = require('./helpers/server.js');
 var fixtures = require('./helpers/fixtures.js');
-var db = require('../data/db-memory.js');
+var db = require('../config/database.js').driver;
 
 describe('Statement API', function() {
   describe('Delete',function() {
 
-    before(function(done) {
-      server.start(done);
-    });
+    this.timeout(5000);
+    before(function(done) { server.start(done); });
+    after(function(done)  { server.stop(done);  });
 
-    after(function(done) {
-      server.stop(done);
-    });
-
+  
+    ////////////////////////////////////////////////////////////
+    //
+    // Error - Cannot delete statements per spec
+    //
     describe('Error', function() {
-
       var result;
-
       before(function(done) {
-
-        // Setup Single Registration witout state
         fixtures.registrationWithStatements(function(data) {
-          
-          // Issue Request
           client.deleteStatement(data.registrationId, data.statementId, function(response) {
             result = response;
             done();
-          });          
+          });
         });
-
       });
-
       it('should return an 400 bad request error', function() {
         result.should.have.property('statusCode', 400);
       });
-
     });
 
 
