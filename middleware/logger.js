@@ -22,11 +22,11 @@ try {
   logging = require('../user-logging.js');
 } catch (e) {
   logging = {
-    headers:      false,
-    queryParams:  false,
-    bodyParams:   false,
-    bodyData:     false,
-    content:      false
+    headers:      true,
+    queryParams:  true,
+    bodyParams:   true,
+    bodyData:     true,
+    content:      true
   };
 }
 
