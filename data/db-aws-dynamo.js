@@ -49,7 +49,7 @@ exports.allRegistrations = function() {
 // Load Specific Registration
 exports.getRegistration = function(registrationId, callback) {
 
-  //console.log("getRegistration:" + registrationId);
+  console.log("getRegistration:" + registrationId);
 
   var dynamodb = new AWS.DynamoDB();
   var params = {
@@ -58,7 +58,7 @@ exports.getRegistration = function(registrationId, callback) {
     },
     TableName: 'xapi-registrations'
   }
-  //console.log(params);
+  console.log(params);
 
   dynamodb.getItem(params, function(err, data) {
     data = data ? data['Item'] : null;
@@ -69,7 +69,7 @@ exports.getRegistration = function(registrationId, callback) {
 
 exports.createRegistration = function(registrationId, callback) {
 
-  //console.log("createRegistration");
+  console.log("createRegistration");
 
   var data = { registrationId: registrationId };
   var dynamodb = new AWS.DynamoDB();
@@ -87,7 +87,7 @@ exports.createRegistration = function(registrationId, callback) {
 
 exports.deleteRegistration = function(registrationId, callback) {
 
-  //console.log("deleteRegistration");
+  console.log("deleteRegistration");
 
   var data = { registrationId: registrationId };
   var dynamodb = new AWS.DynamoDB();
@@ -129,7 +129,7 @@ markRegistrationCompleted = function(registrationId, result, callback) {
 
 exports.getState = function(context, callback) {
 
-  //console.log("getState");
+  console.log("getState");
 
   if (context.stateId==null || context.length==0) {
     throw "asdfasdfasdfsadf"; 
@@ -143,7 +143,7 @@ exports.getState = function(context, callback) {
     },
     TableName: 'xapi-states'
   }
-  //console.log(params);
+  console.log(params);
 
   dynamodb.getItem(params, function(err, data) {
     data = data ? data['Item'] : null;
@@ -156,7 +156,7 @@ exports.getState = function(context, callback) {
 
 exports.getStateKeys = function(context, callback) {
 
-  //console.log("getStateKeys");
+  console.log("getStateKeys");
 
   var dynamodb = new AWS.DynamoDB();
   var params = {
@@ -169,7 +169,7 @@ exports.getStateKeys = function(context, callback) {
     },
     AttributesToGet: [ 'state_id' ]
   }
-  //console.log(params);
+  console.log(params);
 
   dynamodb.query(params, function(err, data) {
     data = data ? data['Items'] : null;
@@ -189,7 +189,7 @@ exports.getStateKeys = function(context, callback) {
 
 exports.setState = function(context, data, callback) {
 
-  //console.log("setState");
+  console.log("setState");
 
   var dynamodb = new AWS.DynamoDB();
   var params = {
@@ -200,7 +200,7 @@ exports.setState = function(context, data, callback) {
     },
     TableName: 'xapi-states'
   }
-  //console.log(params);
+  console.log(params);
 
   dynamodb.putItem(params, function(err, data) {
     responseHelper(err, data, callback);
@@ -210,7 +210,7 @@ exports.setState = function(context, data, callback) {
 
 exports.deleteState = function(context, callback) {
 
-  //console.log("deleteState");
+  console.log("deleteState");
 
   if (context.stateId) {
     var dynamodb = new AWS.DynamoDB();
@@ -221,7 +221,7 @@ exports.deleteState = function(context, callback) {
       },
       TableName: 'xapi-states'
     }
-    //console.log(params);
+    console.log(params);
 
     dynamodb.deleteItem(params, function(err, data) {
       responseHelper(err, data, callback);
@@ -246,7 +246,7 @@ exports.deleteState = function(context, callback) {
 
 exports.getStatement = function(context, callback) {
 
-  //console.log("getStatement");
+  console.log("getStatement");
 
   var dynamodb = new AWS.DynamoDB();
   var params = {
@@ -256,7 +256,7 @@ exports.getStatement = function(context, callback) {
     },
     TableName: 'xapi-statements'
   }
-  //console.log(params);
+  console.log(params);
 
   dynamodb.getItem(params, function(err, data) {
     responseHelper(err, data, callback);
@@ -315,7 +315,7 @@ exports.addStatement = function(context, data, callback) {
 
 exports.findStatements = function(context, callback) {
 
-  //console.log("findStatements");
+  console.log("findStatements");
 
   var dynamodb = new AWS.DynamoDB();
   var params = {
@@ -327,7 +327,7 @@ exports.findStatements = function(context, callback) {
       }
     }
   }
-  //console.log(params);
+  console.log(params);
 
   dynamodb.query(params, function(err, data) {
     data = data ? data['Items'] : null;
@@ -338,7 +338,7 @@ exports.findStatements = function(context, callback) {
 
 exports.deleteStatement = function(registrationId, statementId, callback) {
 
-  //console.log("deleteStatement");
+  console.log("deleteStatement");
 
   var dynamodb = new AWS.DynamoDB();
   var params = {
