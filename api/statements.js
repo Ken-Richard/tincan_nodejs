@@ -20,6 +20,8 @@ module.exports = function() {
   //
   app.put('/', function(req, res) {
 
+    console.log("Statement#PUT");
+
     var context = req.tcapi_context();
     db.getRegistration(context.registrationId, function(reg) {
 
@@ -54,7 +56,7 @@ module.exports = function() {
   // TODO - Maximum Results with More URL
   //
   app.get('/', function(req, res) {
-
+    console.log("Statement#GET");
     var context = req.tcapi_context();
     db.getRegistration(context.registrationId, function(reg) {
 
@@ -81,11 +83,15 @@ module.exports = function() {
 
 
   app.post('/', function(req, res) {
+
+    console.log("Statement#POST");
+
     res.send("Not Implemented", 500);
   });
 
 
   app.delete('/', function(req, res) {
+    console.log("Statement#DELETE");
     res.send("Not supporte in the standard", 400);
   });
 

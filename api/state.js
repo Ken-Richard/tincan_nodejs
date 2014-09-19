@@ -19,6 +19,8 @@ module.exports = function() {
   //
   app.get('/', function(req, res) {
 
+    console.log("State#GET");
+
     var context = req.tcapi_context();
     db.getRegistration(context.registrationId, function(reg) {
 
@@ -54,6 +56,8 @@ module.exports = function() {
   //
   app.put('/', function(req, res) {
 
+    console.log("State#PUT");
+
     var context = req.tcapi_context();
     db.getRegistration(context.registrationId, function(reg) {
 
@@ -76,6 +80,8 @@ module.exports = function() {
   // State#DELETE
   //
   app.delete('/', function(req, res) {
+
+    console.log("State#DELETE");
 
     var context = req.tcapi_context();
     db.getRegistration(context.registrationId, function(reg) {
@@ -109,6 +115,7 @@ module.exports = function() {
   // State#POST
   //
   app.post('/', function(req, res) {
+    console.log("State#POST");
     res.send("Not Implemented", 500);
   });
 

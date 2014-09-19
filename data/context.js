@@ -13,5 +13,6 @@ exports.build = function(req) {
   c.stateId         = req.tcapi_param('stateId');
   c.statementId     = req.tcapi_param('statementId');
   c.actor           = req.tcapi_param('actor');
+  console.log(c);
   return c;
 }

@@ -8,11 +8,8 @@ var context = require('../data/context.js');
 
 exports.middleware = function(req, res, next) {
 
-
-
   // Database
   req.db = db.driver;
-
 
 
   //
