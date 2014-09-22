@@ -16,12 +16,18 @@ exports.middleware = function(req, res, next) {
   });
 
   req.on('end', function() {
+
     req.rawBody = data;
-    console.log("PARAM-BEFORE:");
-    console.log(data);
-    console.log("PARAM-AFTER: ");
-    console.log(qs.parse(data));
     req.tcapi_body_params = qs.parse(data);
+
+    if (req.tcapi_body_params.content && req.tcapi_body_params.content.indexOf('{')>=0) {
+      req.tcapi_body_params_content = JSON.parse(req.tcapi_body_params.content);
+    }
+
+    if (req.tcapi_body_params_content && req.tcapi_body_params_content['context']) {
+      req.tcapi_body_params_context = req.tcapi_body_params_content['context'];
+    }
+
     next();
   });
 

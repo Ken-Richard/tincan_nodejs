@@ -49,7 +49,7 @@ exports.allRegistrations = function() {
 // Load Specific Registration
 exports.getRegistration = function(registrationId, callback) {
 
-  console.log("getRegistration:" + registrationId);
+  //console.log("getRegistration:" + registrationId);
 
   var dynamodb = new AWS.DynamoDB();
   var params = {
@@ -58,7 +58,6 @@ exports.getRegistration = function(registrationId, callback) {
     },
     TableName: 'xapi-registrations'
   }
-  console.log(params);
 
   dynamodb.getItem(params, function(err, data) {
     data = data ? data['Item'] : null;
@@ -131,10 +130,6 @@ exports.getState = function(context, callback) {
 
   console.log("getState");
 
-  if (context.stateId==null || context.length==0) {
-    throw "asdfasdfasdfsadf"; 
-  }
-
   var dynamodb = new AWS.DynamoDB();
   var params = {
     Key: {
@@ -143,7 +138,6 @@ exports.getState = function(context, callback) {
     },
     TableName: 'xapi-states'
   }
-  console.log(params);
 
   dynamodb.getItem(params, function(err, data) {
     data = data ? data['Item'] : null;
@@ -169,7 +163,6 @@ exports.getStateKeys = function(context, callback) {
     },
     AttributesToGet: [ 'state_id' ]
   }
-  console.log(params);
 
   dynamodb.query(params, function(err, data) {
     data = data ? data['Items'] : null;
@@ -200,7 +193,6 @@ exports.setState = function(context, data, callback) {
     },
     TableName: 'xapi-states'
   }
-  console.log(params);
 
   dynamodb.putItem(params, function(err, data) {
     responseHelper(err, data, callback);
@@ -221,7 +213,6 @@ exports.deleteState = function(context, callback) {
       },
       TableName: 'xapi-states'
     }
-    console.log(params);
 
     dynamodb.deleteItem(params, function(err, data) {
       responseHelper(err, data, callback);
@@ -256,7 +247,6 @@ exports.getStatement = function(context, callback) {
     },
     TableName: 'xapi-statements'
   }
-  console.log(params);
 
   dynamodb.getItem(params, function(err, data) {
     responseHelper(err, data, callback);
@@ -277,9 +267,6 @@ exports.addStatement = function(context, data, callback) {
       registration_id: { 'S': context.registrationId },
       statement_id:    { 'S': context.statementId },
     }
-    /* TODO ,
-    Expected: { Exists: false }    
-    */
   }
 
   var verbName = data['verb'];
@@ -288,11 +275,7 @@ exports.addStatement = function(context, data, callback) {
   // Break into components
   for (var key in data) {
     if (data.hasOwnProperty(key)) {
-      if (key=='verb') {
-        params.Item[key] = { 'S': data[key] };
-      } else {
-        params.Item[key] = { 'S': JSON.stringify(data[key]) };
-      }
+      params.Item[key] = { 'S': JSON.stringify(data[key]) };
     }
   }
 
@@ -300,7 +283,7 @@ exports.addStatement = function(context, data, callback) {
     responseHelper(err, data, function(data) {
 
       // Check for completion?
-      if (verbName=='completed') {
+      if (verbName.id.indexOf('completed')>=0) {
         markRegistrationCompleted(context.registrationId,result,function(not_used) {
           callback(data);
         });
@@ -327,7 +310,6 @@ exports.findStatements = function(context, callback) {
       }
     }
   }
-  console.log(params);
 
   dynamodb.query(params, function(err, data) {
     data = data ? data['Items'] : null;

@@ -22,26 +22,17 @@ try {
   logging = require('../user-logging.js');
 } catch (e) {
   logging = {
-    headers:      true,
-    queryParams:  true,
-    bodyParams:   true,
-    bodyData:     true,
-    content:      true
+    headers:      false,
+    queryParams:  false,
+    bodyParams:   false,
+    bodyData:     false,
+    content:      false
   };
 }
 
 exports.middleware = function(req, res, next) {
 
   if (logging.headers) {
-    console.log("");
-    console.log("");
-    console.log("");
-    console.log("");
-    console.log("");
-    console.log("");
-    console.log("");
-    console.log("");
-    console.log("");
     console.log("== HEADERS ========= " + req.url);
     console.log(req.headers);
   }

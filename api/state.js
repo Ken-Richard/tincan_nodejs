@@ -22,14 +22,6 @@ module.exports = function() {
     console.log("State#GET");
 
     var context = req.tcapi_context();
-
-    if (context.registrationId==null || context.registrationId.length==0) {
-      console.log("** ERROR - Missing Registration ID *******************");
-      res.send(404);
-      return;
-    }
-
-    
     db.getRegistration(context.registrationId, function(reg) {
 
       var stateId = context.stateId;
@@ -67,20 +59,13 @@ module.exports = function() {
     console.log("State#PUT");
 
     var context = req.tcapi_context();
-
-    if (context.registrationId==null || context.registrationId.length==0) {
-      console.log("** ERROR - Missing Registration ID *******************");
-      res.send(404);
-      return;
-    }
-
     db.getRegistration(context.registrationId, function(reg) {
 
       var stateId = context.stateId;
       var stateData = req.tcapi_body_params.content;
 
       if (reg) {
-        db.setState(context,stateData, function() {
+        db.setState(context, stateData, function() {
           res.send(204);  
         });
       } else {
@@ -99,13 +84,6 @@ module.exports = function() {
     console.log("State#DELETE");
 
     var context = req.tcapi_context();
-
-    if (context.registrationId==null || context.registrationId.length==0) {
-      console.log("** ERROR - Missing Registration ID *******************");
-      res.send(404);
-      return;
-    }
-    
     db.getRegistration(context.registrationId, function(reg) {
 
       var stateId = context.stateId;
