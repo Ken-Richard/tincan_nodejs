@@ -33,6 +33,15 @@ try {
 exports.middleware = function(req, res, next) {
 
   if (logging.headers) {
+    console.log("");
+    console.log("");
+    console.log("");
+    console.log("");
+    console.log("");
+    console.log("");
+    console.log("");
+    console.log("");
+    console.log("");
     console.log("== HEADERS ========= " + req.url);
     console.log(req.headers);
   }

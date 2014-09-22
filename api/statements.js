@@ -23,6 +23,13 @@ module.exports = function() {
     console.log("Statement#PUT");
 
     var context = req.tcapi_context();
+
+    if (context.registrationId==null || context.registrationId.length==0) {
+      console.log("** ERROR - Missing Registration ID *******************");
+      res.send(404);
+      return;
+    }
+    
     db.getRegistration(context.registrationId, function(reg) {
 
       var statementId = context.statementId;

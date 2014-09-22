@@ -17,6 +17,10 @@ exports.middleware = function(req, res, next) {
 
   req.on('end', function() {
     req.rawBody = data;
+    console.log("PARAM-BEFORE:");
+    console.log(data);
+    console.log("PARAM-AFTER: ");
+    console.log(qs.parse(data));
     req.tcapi_body_params = qs.parse(data);
     next();
   });
